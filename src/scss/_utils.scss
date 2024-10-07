@@ -1,0 +1,49 @@
+@mixin ellipsis-text {
+  white-space: nowrap;
+  overflow-y: visible;
+  overflow-x: hidden;
+  overflow-x: clip;
+  text-overflow: ellipsis;
+}
+
+@mixin apply-mask-image($imageDataUrl, $fill, $size: 1rem) {
+  mask-image: $imageDataUrl;
+  -webkit-mask-image: $imageDataUrl;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-size: $size;
+  -webkit-mask-size: $size;
+  background-color: $fill;
+}
+
+@mixin component-layer-overrides($component-name, $important: "") {
+  background: var(--sse-auth__#{$component-name}--background-color) #{$important};
+  color: var(--sse-auth__#{$component-name}--color) #{$important};
+  box-shadow: var(--sse-auth__#{$component-name}--box-shadow) #{$important};
+  border-radius: var(--sse-auth__#{$component-name}--border-radius) #{$important};
+  border-block-start: var(--sse-auth__#{$component-name}--border-block-start) #{$important};
+  border-block-end: var(--sse-auth__#{$component-name}--border-block-end) #{$important};
+  border-inline-start: var(--sse-auth__#{$component-name}--border-inline-start)
+    #{$important};
+  border-inline-end: var(--sse-auth__#{$component-name}--border-inline-end) #{$important};
+}
+
+@mixin reset-select {
+  // A reset of styles, including removing the default dropdown arrow
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  // Additional resets for further consistency
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  outline: none;
+}
