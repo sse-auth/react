@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { TextButton, IconButton } from "../../components";
-import { useGithub } from "./useGithub";
-import { GithubIconButtonProps, GithubLoginButtonProps } from "./types";
-import { GithubIcon } from "../../assets/Icons";
+import { useBattleDotNet } from "./useBattleDotNet";
+import { BattleDotNetLoginButtonProps, BattleDotNetIconButtonProps, } from "./types";
+import { BattleDotNetIcon } from "../../assets/Icons";
 
-export const GithubLoginButton: React.FC<GithubLoginButtonProps> = ({
+export const BattleDotNetLogin: React.FC<BattleDotNetLoginButtonProps> = ({
   onSuccess,
   onFailure,
   ...props
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGithub(props);
+      const { error, accessToken, userData } = await useBattleDotNet(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -29,25 +29,25 @@ export const GithubLoginButton: React.FC<GithubLoginButtonProps> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with GitHub"}
+      {loading ? "Loading..." : "Login with BattleDotNet"}
     </TextButton>
   );
 };
 
-export const GithubIconButton: React.FC<GithubIconButtonProps> = ({
+export const BattleDotNetIconButton: React.FC<BattleDotNetIconButtonProps> = ({
   onFailure,
   onSuccess,
-  icon = GithubIcon,
+  icon = BattleDotNetIcon,
   variant,
   className,
   ...props
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGithub(props);
+      const { error, accessToken, userData } = await useBattleDotNet(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -67,9 +67,9 @@ export const GithubIconButton: React.FC<GithubIconButtonProps> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with GitHub"
+      aria-label="Login with BattleDotNet"
     >
-      {loading ? "Logging..." : "Login with GitHub"}
+      {loading ? "Logging..." : "Login with BattleDotNet"}
     </IconButton>
   );
 };

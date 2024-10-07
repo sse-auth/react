@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { TextButton, IconButton } from "../../components";
-import { useGithub } from "./useGithub";
-import { GithubIconButtonProps, GithubLoginButtonProps } from "./types";
-import { GithubIcon } from "../../assets/Icons";
+import { useAuth0 } from "./useAuth0";
+import { Auth0IconButtonProps, Auth0LoginButtonProps } from "./types";
+import { Auth0Icon } from "../../assets/Icons";
 
-export const GithubLoginButton: React.FC<GithubLoginButtonProps> = ({
+export const Auth0Login: React.FC<Auth0LoginButtonProps> = ({
   onSuccess,
   onFailure,
   ...props
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGithub(props);
+      const { error, accessToken, userData } = await useAuth0(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -29,25 +29,25 @@ export const GithubLoginButton: React.FC<GithubLoginButtonProps> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with GitHub"}
+      {loading ? "Loading..." : "Login with Auth0"}
     </TextButton>
   );
 };
 
-export const GithubIconButton: React.FC<GithubIconButtonProps> = ({
+export const Auth0IconButton: React.FC<Auth0IconButtonProps> = ({
   onFailure,
   onSuccess,
-  icon = GithubIcon,
+  icon = Auth0Icon,
   variant,
   className,
   ...props
 }) => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGithub(props);
+      const { error, accessToken, userData } = await useAuth0(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -67,9 +67,9 @@ export const GithubIconButton: React.FC<GithubIconButtonProps> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with GitHub"
+      aria-label="Login with Auth0"
     >
-      {loading ? "Logging..." : "Login with GitHub"}
+      {loading ? "Logging..." : "Login with Auth0"}
     </IconButton>
   );
 };

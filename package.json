@@ -1,10 +1,13 @@
 {
   "name": "@sse-auth/react",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
-  "system": "dist/bundle.min.js",
+  "exports": {
+    "./providers/*": "./dist/src/providers/*",
+    "./components/*": "./dist/src/components/*"
+  },
   "files": [
     "dist",
     "src",
@@ -28,13 +31,11 @@
     "@types/react": "^18.3.7",
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
-    "eslint": "^8.57.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.24.0",
     "sass": "^1.79.4",
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.5.0"
+    "typescript": "^5.6.2"
   },
   "dependencies": {
     "@rollup/plugin-terser": "^0.4.4",

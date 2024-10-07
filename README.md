@@ -13,6 +13,7 @@ The auth package provides a simple and easy-to-use authentication system with a 
 - `Popup` window for login
 - `TextButton` and `IconButton` components
 - Easy to use
+- Providing eide range of OAuth
 
 ### **Getting Started**
 
@@ -23,29 +24,47 @@ The auth package provides a simple and easy-to-use authentication system with a 
 To install the auth package, run the following command in your terminal:
 
 ```bash
-npm install @sse-auth/react
+npm install @sse-auth/react clsx
 ```
 
 or
 
 ```bash
-yarn install @sse-auth/react
+yarn install @sse-auth/react clsx
 ```
+
+## Providers
+
+- Github
+- Facebook
+- Auth0
+- BattleDotNet
 
 ## Usage
 
-To use the `GithubButton` and `GithubLoginButton` components, simply import and render them in your JavaScript file:
+To use the Login components, simply import and render them in your JavaScript file:
 
 ```jsx
-import { GithubLoginButton, GithubButton } from "@sse-auth/react"
+import { ProviderLogin, ProviderIconButton useProvider } from "@sse-auth/react"
+```
 
-const function = () => {
-    return (
-        <>
-            <GithubLoginButton onSuccess={} onFailure={} />
-        </>
-    )
-}
+`Provider` is `replaced` by Your Auth like `Github`, `Facebook`, `Auth`. `ProviderLogin` is a Button with Text only whereas `ProviderIconButton` Has Icon Of the Auth Package as well as you can enter the icon also
+
+- Use Of `useProvider`
+
+```jsx
+import { useProvider } from "@sse-auth/react";
+
+const App = () => {
+  const handleLogin = () => {
+    const { error, accessToken, userData } = useProvider({
+      clientId: "",
+      clientSecret: "",
+    });
+  };
+
+  return <button onClick={handleLogin}>Login</button>;
+};
 ```
 
 ## **Interfaces**
@@ -77,59 +96,6 @@ export type ButtonWithIconProps = {
 } & ComponentProps<"button"> &
   IconProps;
 ```
-
-- `Github` interface
-
-```tsx
-export type GithubProps = {
-  /**
-   * GitHub OAuth Client ID
-   */
-  clientId?: string;
-  /**
-   * GitHub OAuth Client Secret
-   */
-  clientSecret?: string;
-  /**
-   * GitHub OAuth Scope
-   * @default []
-   * @see https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
-   * @example ['user:email']
-   */
-  scope?: string[];
-  /**
-   * Require email from user, adds the ['user:email'] scope if not present
-   * @default false
-   */
-  emailRequired?: boolean;
-
-  /**
-   * GitHub OAuth Authorization URL
-   * @default 'https://github.com/login/oauth/authorize'
-   */
-  authorizationURL?: string;
-
-  /**
-   * GitHub OAuth Token URL
-   * @default 'https://github.com/login/oauth/access_token'
-   */
-  tokenURL?: string;
-
-  /**
-   * GitHub OAuth Token URL
-   * @default 'https://api.github.com/user'
-   */
-  userUrl?: string;
-
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#1-request-a-users-github-identity
-   * @example { allow_signup: 'true' }
-   */
-  authorizationParams?: Record<string, string>;
-};
-```
-
 ### **LICENSE**
 
 The auth package is licensed under the [MIT](LICENSE) License.

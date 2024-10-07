@@ -1,16 +1,15 @@
+import { FacebookProps } from "./types";
 import { UserProps } from "../types";
-import { GithubProps } from "./types";
 import { PopupWindow } from "../../utils";
 
 /**
- * Initiates the GitHub login process using OAuth.
+ * Initiates the Facebook login process using OAuth.
  *
- * @param {GithubProps} props - Configuration options for the GitHub OAuth process.
+ * @param {FacebookProps} props - Configuration options for the Facebook OAuth process.
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-
-export async function useGithubLogin(props: GithubProps): Promise<{
+export async function useFacebook(props: FacebookProps): Promise<{
   error: Error | null | unknown;
   accessToken: string | null;
   userData: UserProps | null;
@@ -19,32 +18,31 @@ export async function useGithubLogin(props: GithubProps): Promise<{
     clientId,
     clientSecret,
     scope = [],
-    emailRequired = false,
-    authorizationURL = "https://github.com/login/oauth/authorize",
-    tokenURL = "https://github.com/login/oauth/access_token",
-    userUrl = "https://api.github.com/user",
+    fields,
+    authorizationURL = "https://www.facebook.com/v19.0/dialog/oauth",
+    tokenURL = "https://graph.facebook.com/v19.0/oauth/access_token",
+    userUrl = "https://graph.facebook.com/v19.0/me",
     authorizationParams = {},
+    redirectUri = window.location.origin,
   } = props;
 
   if (!clientId || !clientSecret) {
     throw new Error("Client Id and Client Secret is Required");
   }
 
-  const finalScope =
-    emailRequired && !scope.includes("user:email")
-      ? [...scope, "user:email"]
-      : scope;
+  const finalScope = !scope.includes("email") ? [...scope, "email"] : scope;
 
   const authParams = new URLSearchParams({
     client_id: clientId || "",
+    redirect_uri: redirectUri,
     scope: finalScope.join(" "),
     ...authorizationParams,
   });
 
   const popup = new PopupWindow({
     url: `${authorizationURL}?${authParams.toString()}`,
-    windowName: "Github Login",
-    redirectUri: window.location.origin,
+    windowName: "Facebook Login",
+    redirectUri: redirectUri,
   });
 
   try {
@@ -55,7 +53,6 @@ export async function useGithubLogin(props: GithubProps): Promise<{
 
     const response = await fetch(tokenURL, {
       method: "POST",
-      mode: "no-cors", // Add this option
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -63,6 +60,7 @@ export async function useGithubLogin(props: GithubProps): Promise<{
       body: JSON.stringify({
         client_id: clientId,
         client_secret: clientSecret,
+        redirect_uri: redirectUri,
         code: params.code,
       }),
     });
@@ -77,11 +75,14 @@ export async function useGithubLogin(props: GithubProps): Promise<{
 
     const accessToken = tokenData.access_token;
 
+    const finalFields = fields || ["id", "name"];
+    const fieldsString = finalFields.join(",");
+
     const userResponse = await fetch(userUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/json",
-      },
+      body: JSON.stringify({
+        fields: fieldsString,
+        access_token: accessToken,
+      }),
     });
 
     const userData = await userResponse.json();

@@ -1,3 +1,3 @@
 export * from "./types";
-export * from "./useFaceBookLogin";
+export * from "./useFacebook";
 export * from "./FacebookLogin";

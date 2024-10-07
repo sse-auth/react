@@ -1,6 +1,6 @@
 import React from "react";
 import { TextButton, IconButton } from "../../components";
-import { useFacebookLogin } from "./useFaceBookLogin";
+import { useFacebook } from "./useFacebook";
 import { FacebookIconButtonProps, FacebookLoginButtonProps } from "./types";
 import { FaceBookIcon } from "../../assets/Icons";
 
@@ -14,7 +14,7 @@ export const FacebookLogin: React.FC<FacebookLoginButtonProps> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useFacebookLogin(props);
+      const { error, accessToken, userData } = await useFacebook(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -29,7 +29,7 @@ export const FacebookLogin: React.FC<FacebookLoginButtonProps> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with GitHub"}
+      {loading ? "Loading..." : "Login with Facebook"}
     </TextButton>
   );
 };
@@ -47,7 +47,7 @@ export const FacebookIconButton: React.FC<FacebookIconButtonProps> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useFacebookLogin(props);
+      const { error, accessToken, userData } = await useFacebook(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -67,9 +67,9 @@ export const FacebookIconButton: React.FC<FacebookIconButtonProps> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with GitHub"
+      aria-label="Login with Facebook"
     >
-      {loading ? "Logging..." : "Login with GitHub"}
+      {loading ? "Logging..." : "Login with Facebook"}
     </IconButton>
   );
 };

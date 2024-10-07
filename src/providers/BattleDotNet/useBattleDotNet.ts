@@ -1,15 +1,17 @@
-import { FacebookProps } from "./types";
 import { UserProps } from "../types";
+import { BattledotnetProps } from "./types";
 import { PopupWindow } from "../../utils";
+import { randomUUID } from "node:crypto";
 
 /**
- * Initiates the Facebook login process using OAuth.
+ * Initiates the GitHub login process using OAuth.
  *
- * @param {FacebookProps} props - Configuration options for the Facebook OAuth process.
+ * @param {BattledotnetProps} props - Configuration options for the GitHub OAuth process.
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useFacebookLogin(props: FacebookProps): Promise<{
+
+export async function useBattleDotNet(props: BattledotnetProps): Promise<{
   error: Error | null | unknown;
   accessToken: string | null;
   userData: UserProps | null;
@@ -18,32 +20,49 @@ export async function useFacebookLogin(props: FacebookProps): Promise<{
     clientId,
     clientSecret,
     scope = [],
-    fields,
-    authorizationURL = "https://www.facebook.com/v19.0/dialog/oauth",
-    tokenURL = "https://graph.facebook.com/v19.0/oauth/access_token",
-    userUrl = "https://graph.facebook.com/v19.0/me",
+    // authorizationURL = "https://oauth.battle.net/authorize",
+    // tokenURL = "https://oauth.battle.net/token",
     authorizationParams = {},
+    region = "EU",
     redirectUri = window.location.origin,
   } = props;
+
+  const userUrl = "https://oauth.battle.net/userinfo";
 
   if (!clientId || !clientSecret) {
     throw new Error("Client Id and Client Secret is Required");
   }
 
-  const finalScope = !scope.includes("email") ? [...scope, "email"] : scope;
+  const finalScope = !scope.includes("openid") ? [...scope, "openid"] : scope;
 
   const authParams = new URLSearchParams({
-    client_id: clientId || "",
+    client_id: clientId,
     redirect_uri: redirectUri,
     scope: finalScope.join(" "),
+    state: randomUUID(), // Todo: handle PKCE flow
+    response_type: "code",
     ...authorizationParams,
   });
 
+  const authUrl =
+    region === "CN"
+      ? "https://oauth.battlenet.com.cn/authorize"
+      : "https://oauth.battlenet.com/authorize";
+
+  const tokURL =
+    region === "CN"
+      ? "https://oauth.battlenet.com.cn/token"
+      : "https://oauth.battlenet.com/token";
+
   const popup = new PopupWindow({
-    url: `${authorizationURL}?${authParams.toString()}`,
-    windowName: "Facebook Login",
-    redirectUri: redirectUri,
+    url: `${authUrl}?${authParams.toString()}`,
+    windowName: "Github Login",
+    redirectUri: window.location.origin,
   });
+
+  const authCode = Buffer.from(`${clientId}:${clientSecret}`).toString(
+    "base64"
+  );
 
   try {
     const params = await popup.open();
@@ -51,16 +70,15 @@ export async function useFacebookLogin(props: FacebookProps): Promise<{
       throw new Error(params.error);
     }
 
-    const response = await fetch(tokenURL, {
+    const response = await fetch(tokURL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Basic ${authCode}`,
       },
       body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        redirect_uri: redirectUri,
+        grant_type: "authorization_code",
+        scope: finalScope.join(" "),
         code: params.code,
       }),
     });
@@ -75,14 +93,11 @@ export async function useFacebookLogin(props: FacebookProps): Promise<{
 
     const accessToken = tokenData.access_token;
 
-    const finalFields = fields || ["id", "name"];
-    const fieldsString = finalFields.join(",");
-
     const userResponse = await fetch(userUrl, {
-      body: JSON.stringify({
-        fields: fieldsString,
-        access_token: accessToken,
-      }),
+      headers: {
+        "User-Agent": `Battledotnet-OAuth-${clientId}`,
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
 
     const userData = await userResponse.json();

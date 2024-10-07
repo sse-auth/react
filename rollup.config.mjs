@@ -1,6 +1,6 @@
 import typescript from "@rollup/plugin-typescript";
 import json from "@rollup/plugin-json";
-import terser from "@rollup/plugin-terser";
+// import terser from "@rollup/plugin-terser";
 import pkg from "./package.json" with { type: "json" }
 
 /**
@@ -34,14 +34,6 @@ const config = {
       sourcemap: true,
       chunkFileNames,
     },
-    {
-      dir: "dist",
-      entryFileNames: "bundle.min.js",
-      format: "system",
-      // sourcemap: true,
-      chunkFileNames,
-      plugins: [terser()]
-    }
   ],
   external: [
     ...Object.keys(pkg.dependencies || {}),
