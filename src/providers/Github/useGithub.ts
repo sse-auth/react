@@ -55,7 +55,6 @@ export async function useGithub(props: GithubProps): Promise<{
 
     const response = await fetch(tokenURL, {
       method: "POST",
-      mode: "no-cors", // Add this option
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
