@@ -24,13 +24,13 @@ The auth package provides a simple and easy-to-use authentication system with a 
 To install the auth package, run the following command in your terminal:
 
 ```bash
-npm install @sse-auth/react clsx
+npm install @sse-auth/react
 ```
 
 or
 
 ```bash
-yarn install @sse-auth/react clsx
+yarn install @sse-auth/react
 ```
 
 ## Providers
@@ -45,7 +45,7 @@ yarn install @sse-auth/react clsx
 To use the Login components, simply import and render them in your JavaScript file:
 
 ```jsx
-import { ProviderLogin, ProviderIconButton useProvider } from "@sse-auth/react"
+import { ProviderLogin, ProviderIconButton, useProvider } from "@sse-auth/react"
 ```
 
 `Provider` is `replaced` by Your Auth like `Github`, `Facebook`, `Auth`. `ProviderLogin` is a Button with Text only whereas `ProviderIconButton` Has Icon Of the Auth Package as well as you can enter the icon also

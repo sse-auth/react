@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { clsx } from "../utils";
 import React from "react";
 
 export type IconProps = {

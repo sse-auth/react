@@ -1,5 +1,5 @@
 import { ComponentProps, ForwardedRef, forwardRef } from "react";
-import clsx from "clsx";
+import { clsx } from "../../utils";
 import { Icon, IconProps } from "../Icon";
 
 export type ButtonWithIconProps = {

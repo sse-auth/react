@@ -1,0 +1,76 @@
+name: Component Issue
+description: A template for reporting issues with auth package
+title: "[Bug]: "
+labels: ["bug", "Component Issue"]
+assignees:
+  - sseworld
+  - ssewofficial
+body:
+  - type: markdown
+    attributes:
+      value: | Thanks for taking the time to fill out this Issue!
+  - type: input
+    id: contact
+    attributes:
+      label: Contact Details
+      description: How can we get in touch with you if we need more info?
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: dropdown
+    id: version
+    attributes:
+      label: Version
+      description: What version of our software are you running?
+      options:
+        - 1.1.0 (Latest)
+        - 1.0.0 (Alpha)
+      default: 0
+    validations:
+      required: true
+  - type: input
+    id: component
+    attributes:
+      label: Component Details
+      description: Please enter the Component Name
+      placeholder: ex. GithubIcon, IconButton
+    validations:
+      required: false
+  - type: textarea
+    id: describe-issue
+    label: Describe the issue
+    description: Detailed description of the issue
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: |
+        **⚠️ Issues that we can't reproduce can't be fixed.**
+
+        Please provide a link to a live example and an unambiguous set of steps to reproduce this bug. See our [documentation](https://mui.com/material-ui/getting-started/support/#bug-reproductions) on how to build a reproduction case.
+      value: |
+        Link to live example: (required)
+
+        Steps:
+        1.
+        2.
+        3.
+  - type: textarea
+    attributes:
+      label: Current behavior
+      description: Describe what happens instead of the expected behavior.
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: Describe what should happen.
+  - type: textarea
+    attributes:
+      label: Context
+      description: What are you trying to accomplish? Providing context helps us come up with a solution that is more useful in the real world.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/sse-auth/react/blob/master/CODE_OF_CONDUCT.md). 
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
