@@ -1,7 +1,7 @@
 import { UserProps } from "../types";
 import { BattledotnetProps } from "./types";
 import { PopupWindow } from "../../utils";
-import { randomUUID } from "node:crypto";
+import { randomUUID } from "crypto";
 
 /**
  * Initiates the GitHub login process using OAuth.
