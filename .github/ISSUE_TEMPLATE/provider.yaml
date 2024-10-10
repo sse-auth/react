@@ -1,7 +1,6 @@
-name: Provider Issue
-description: A template for reporting issues with auth package
-title: "[Bug]: "
-labels: ["bug", "Provider Issue"]
+name: Bug report (Provider)
+description: Create a provider-specific report
+labels: [bug, providers]
 assignees:
   - sseworld
   - ssewofficial
