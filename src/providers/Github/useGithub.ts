@@ -1,6 +1,7 @@
 import { UserProps } from "../types";
 import { GithubProps } from "./types";
-import { PopupWindow } from "../../utils";
+import { PopupWindow, toQuery } from "../../utils";
+import axios from "axios";
 
 /**
  * Initiates the GitHub login process using OAuth.
@@ -12,7 +13,7 @@ import { PopupWindow } from "../../utils";
 
 export async function useGithub(props: GithubProps): Promise<{
   error: Error | null | unknown;
-  accessToken: string | null;
+  accessToken: string | null | object;
   userData: UserProps | null;
 }> {
   const {
@@ -53,20 +54,22 @@ export async function useGithub(props: GithubProps): Promise<{
       throw new Error(params.error);
     }
 
-    const response = await fetch(tokenURL, {
+    const body = new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      code: params.code,
+    });
+
+    const proxyUrl = `https://cors-anywhere.herokuapp.com/${tokenURL}`;
+    const response = await axios.post(`${tokenURL}?${body}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: params.code,
-      }),
     });
 
-    const tokenData = await response.json();
+    const tokenData = await response.data;
 
     if (tokenData.error) {
       throw new Error(
@@ -74,7 +77,9 @@ export async function useGithub(props: GithubProps): Promise<{
       );
     }
 
-    const accessToken = tokenData.access_token;
+    // const tokenIn = toQuery(tokenData);
+    // const accessToken = tokenIn.access_token
+    const accessToken = tokenData.access_token
 
     const userResponse = await fetch(userUrl, {
       headers: {

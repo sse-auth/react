@@ -49,12 +49,12 @@ export type GithubProps = {
 };
 
 export interface GithubLoginButtonProps extends GithubProps {
-  onSuccess: (accessToken: string, userData: any) => void;
+  onSuccess: (accessToken: string | object, userData: any) => void;
   onFailure: (error: Error) => void;
 }
 
 export type GithubIconButtonProps = GithubProps & {
-  onSuccess: (accessToken: string, userData: any) => void;
+  onSuccess: (accessToken: string | object, userData: any) => void;
   onFailure: (error: Error) => void;
   //   icon: IconProps["icon"];
   icon?: React.ReactNode | string;

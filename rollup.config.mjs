@@ -28,8 +28,8 @@ const config = {
     ...Object.keys(pkg.peerDependencies || {}),
     "react/jsx-runtime",
     "react/jsx-dev-runtime",
-    "crypto",
-    "node:crypto"
+    // "crypto",
+    // "node:crypto"
   ],
   plugins: [
     json(),

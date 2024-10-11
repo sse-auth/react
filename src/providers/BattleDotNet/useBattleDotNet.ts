@@ -1,7 +1,7 @@
 import { UserProps } from "../types";
 import { BattledotnetProps } from "./types";
 import { PopupWindow } from "../../utils";
-import { randomUUID } from "crypto";
+// import { randomUUID } from "crypto";
 
 /**
  * Initiates the GitHub login process using OAuth.
@@ -39,7 +39,7 @@ export async function useBattleDotNet(props: BattledotnetProps): Promise<{
     client_id: clientId,
     redirect_uri: redirectUri,
     scope: finalScope.join(" "),
-    state: randomUUID(), // Todo: handle PKCE flow
+    // state: randomUUID(), // Todo: handle PKCE flow
     response_type: "code",
     ...authorizationParams,
   });
