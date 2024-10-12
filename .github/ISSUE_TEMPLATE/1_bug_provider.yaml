@@ -1,6 +1,7 @@
 name: Bug report (Provider)
 description: Create a provider-specific report
-labels: [triage, bug, providers]
+title: "[Bug]: "
+labels: [triage, bug, provider]
 body:
   - type: markdown
     attributes:
@@ -14,6 +15,19 @@ body:
         _Providing incorrect/insufficient information or skipping steps to reproduce the issue *will* result in closing the issue or converting to a discussion without further explanation._
 
         If you have a generic question specific to your project, it is best asked in Discussions under the [Questions category](https://github.com/nextauthjs/next-auth/discussions/new?category=Questions)
+  - type: dropdown
+    attributes:
+      label: Version
+      description: Version this issue is related to
+      options:
+        - "1.0.0"
+        - "1.1.0"
+        - "1.2.0"
+        - "1.2.0-alpha"
+        - "1.3.0"
+      default: "1.3.0"
+    validations:
+      required: true
   - type: dropdown
     attributes:
       label: Provider type
