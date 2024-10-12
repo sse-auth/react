@@ -4,16 +4,6 @@ import json from "@rollup/plugin-json";
 import pkg from "./package.json" with { type: "json" }
 
 /**
- * @type {import('rollup').OutputOptions['chunkFileNames']}
- */
-const chunkFileNames = (chunkInfo) => {
-  if (chunkInfo.name.includes("CallStatsLatencyChart")) {
-    return "sse-latency-chart-[hash].[format].js";
-  }
-  return "[name]-[hash].[format].js";
-};
-
-/**
  * @type {import('rollup').RollupOptions}
  */
 const config = {
@@ -25,14 +15,12 @@ const config = {
       entryFileNames: "index.es.js",
       format: "es",
       sourcemap: true,
-      chunkFileNames,
     },
     {
       dir: "dist",
       entryFileNames: "index.cjs.js",
       format: "cjs",
       sourcemap: true,
-      chunkFileNames,
     },
   ],
   external: [
@@ -40,6 +28,8 @@ const config = {
     ...Object.keys(pkg.peerDependencies || {}),
     "react/jsx-runtime",
     "react/jsx-dev-runtime",
+    // "crypto",
+    // "node:crypto"
   ],
   plugins: [
     json(),
@@ -52,4 +42,77 @@ const config = {
   ],
 };
 
-export default [config];
+const button = {
+  input: "buttons/index.ts",
+  output: [
+    {
+      dir: "dist",
+      entryFileNames: "buttons.es.js",
+      format: "es",
+      sourcemap: true,
+    },
+    {
+      dir: "dist",
+      entryFileNames: "buttons.cjs.js",
+      format: "cjs",
+      sourcemap: true,
+    },
+  ],
+  external: [
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {}),
+    "react/jsx-runtime",
+    "react/jsx-dev-runtime",
+    // "crypto",
+    // "node:crypto"
+  ],
+  plugins: [
+    json(),
+    typescript({
+      tsconfig:
+        process.env.NODE_ENV === "production"
+          ? "./tsconfig.production.json"
+          : "./tsconfig.json",
+    }),
+  ],
+};
+
+export default [config, button];
+
+// /**
+//  * @type {import('rollup').RollupOptions}
+//  */
+// const createConfig = (input) => ({
+//   input: input,
+//   output: [
+//     {
+//       dir: "dist",
+//       entryFileNames: `${input.split("/").pop().split(".")[0]}.es.js`,
+//       format: "es",
+//       sourcemap: true,
+//     },
+//     {
+//       dir: "dist",
+//       entryFileNames: `${input.split("/").pop().split(".")[0]}.cjs.js`,
+//       format: "cjs",
+//       sourcemap: true,
+//     },
+//   ],
+//   external: [
+//     ...Object.keys(pkg.dependencies || {}),
+//     ...Object.keys(pkg.peerDependencies || {}),
+//     "react/jsx-runtime",
+//     "react/jsx-dev-runtime",
+//   ],
+//   plugins: [
+//     json(),
+//     typescript({
+//       tsconfig:
+//         process.env.NODE_ENV === "production"
+//           ? "./tsconfig.production.json"
+//           : "./tsconfig.json",
+//     }),
+//   ],
+// });
+
+// export default [createConfig("index.ts"), createConfig("buttons/index.ts")]
