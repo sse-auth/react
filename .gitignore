@@ -5,3 +5,4 @@ dist
 changlog-generator.js
 test
 packages
+cors
