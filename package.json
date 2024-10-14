@@ -4,6 +4,28 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
+  "source": "index.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.es.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./buttons": {
+      "require": "./dist/buttons.cjs.js",
+      "import": "./dist/buttons.es.js",
+      "types": "./dist/buttons/index.d.ts"
+    },
+    "./buttons/*": "./dist/buttons/*",
+    "./provider": {
+      "require": "./dist/providers.cjs.js",
+      "import": "./dist/providers.es.js",
+      "types": "./dist/src/providers/index.d.ts"
+    },
+    "./provider/*": "./dist/src/providers/*",
+    "./package.json": "./package.json",
+    "./*": "./*"
+  },
   "files": [
     "dist",
     "src",

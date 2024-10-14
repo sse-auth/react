@@ -1,7 +1,7 @@
 // import { IconProps } from "../../components";
 import React from "react";
 import { PopupWindow, toQuery } from "../utils";
-import { ResponseProps } from "./types";
+import { ResponseProps, UserProps } from "./types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { FaceBookIcon } from "../assets/Icons";
@@ -82,7 +82,7 @@ export type FacebookIconButtonProps = FacebookProps & {
  */
 export async function useFacebook(
   props: FacebookProps
-): Promise<ResponseProps> {
+): Promise<ResponseProps<UserProps>> {
   const {
     clientId,
     clientSecret,

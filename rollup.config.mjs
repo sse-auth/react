@@ -7,7 +7,6 @@ import pkg from "./package.json" with { type: "json" }
  * @type {import('rollup').RollupOptions}
  */
 const config = {
-  // external: "",
   input: "index.ts",
   output: [
     {
@@ -49,13 +48,13 @@ const button = {
       dir: "dist",
       entryFileNames: "buttons.es.js",
       format: "es",
-      sourcemap: true,
+      // sourcemap: true,
     },
     {
       dir: "dist",
       entryFileNames: "buttons.cjs.js",
       format: "cjs",
-      sourcemap: true,
+      // sourcemap: true,
     },
   ],
   external: [
@@ -63,8 +62,6 @@ const button = {
     ...Object.keys(pkg.peerDependencies || {}),
     "react/jsx-runtime",
     "react/jsx-dev-runtime",
-    // "crypto",
-    // "node:crypto"
   ],
   plugins: [
     json(),
@@ -77,42 +74,37 @@ const button = {
   ],
 };
 
-export default [config, button];
+const providers = {
+  input: "src/providers/index.ts",
+  output: [
+    {
+      dir: "dist",
+      entryFileNames: "providers.es.js",
+      format: "es",
+      // sourcemap: true,
+    },
+    {
+      dir: "dist",
+      entryFileNames: "providers.cjs.js",
+      format: "cjs",
+      // sourcemap: true,
+    },
+  ],
+  external: [
+    ...Object.keys(pkg.dependencies || {}),
+    ...Object.keys(pkg.peerDependencies || {}),
+    "react/jsx-runtime",
+    "react/jsx-dev-runtime",
+  ],
+  plugins: [
+    json(),
+    typescript({
+      tsconfig:
+        process.env.NODE_ENV === "production"
+          ? "./tsconfig.production.json"
+          : "./tsconfig.json",
+    }),
+  ],
+};
 
-// /**
-//  * @type {import('rollup').RollupOptions}
-//  */
-// const createConfig = (input) => ({
-//   input: input,
-//   output: [
-//     {
-//       dir: "dist",
-//       entryFileNames: `${input.split("/").pop().split(".")[0]}.es.js`,
-//       format: "es",
-//       sourcemap: true,
-//     },
-//     {
-//       dir: "dist",
-//       entryFileNames: `${input.split("/").pop().split(".")[0]}.cjs.js`,
-//       format: "cjs",
-//       sourcemap: true,
-//     },
-//   ],
-//   external: [
-//     ...Object.keys(pkg.dependencies || {}),
-//     ...Object.keys(pkg.peerDependencies || {}),
-//     "react/jsx-runtime",
-//     "react/jsx-dev-runtime",
-//   ],
-//   plugins: [
-//     json(),
-//     typescript({
-//       tsconfig:
-//         process.env.NODE_ENV === "production"
-//           ? "./tsconfig.production.json"
-//           : "./tsconfig.json",
-//     }),
-//   ],
-// });
-
-// export default [createConfig("index.ts"), createConfig("buttons/index.ts")]
+export default [config, button, providers];

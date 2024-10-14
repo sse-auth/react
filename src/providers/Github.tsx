@@ -1,7 +1,7 @@
 // import { IconProps } from "../../components";
 import React from "react";
 import { PopupWindow, toQuery } from "../utils";
-import { ResponseProps } from "./types";
+import { ResponseProps, UserProps } from "./types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { GithubIcon } from "../assets/Icons";
@@ -75,7 +75,7 @@ export type GithubIconButtonProps = GithubProps & {
  * @returns {Promise<{ error: Error | null, accessToken: string | object | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useGithub(props: GithubProps): Promise<ResponseProps> {
+export async function useGithub(props: GithubProps): Promise<ResponseProps<UserProps>> {
   const {
     clientId,
     clientSecret,
