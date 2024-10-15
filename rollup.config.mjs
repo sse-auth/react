@@ -107,4 +107,8 @@ const providers = {
   ],
 };
 
+// const providersBuild = (name: string) = {
+//   input: `src/providers/`
+// }
+
 export default [config, button, providers];

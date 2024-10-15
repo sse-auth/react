@@ -1,139 +1,113 @@
 import React from "react";
+import { DiscordIcon } from "../assets/Icons";
+import { PopupWindow } from "../utils";
+import { TextButton, IconButton } from "../components";
 import {
-  UserProps,
   ResponseProps,
+  UserProps,
   LoginButtonProps,
   IconButtonProps,
   SSEProps,
 } from "./types";
-import { PopupWindow } from "../utils";
-import { TextButton, IconButton } from "../components";
-import { Auth0Icon } from "../assets/Icons";
 
-export type Auth0Props = SSEProps & {
+export interface DiscordProps extends SSEProps {
   /**
-   * Auth0 OAuth Client ID
+   * Discord OAuth Client ID
    */
   clientId?: string;
   /**
-   * Auth0 OAuth Client Secret
+   * Discord OAuth Client Secret
    */
   clientSecret?: string;
   /**
-   * Auth0 OAuth Issuer
-   */
-  domain?: string;
-  /**
-   * Auth0 OAuth Audience
-   */
-  audience?: string;
-  /**
-   * Auth0 OAuth Scope
+   * Discord OAuth Scope
    * @default []
-   * @see https://auth0.com/docs/get-started/apis/scopes/openid-connect-scopes
-   * @example ['openid']
+   * @see https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes
+   * @example ['identify', 'email']
+   * Without the identify scope the user will not be returned.
    */
   scope?: string[];
   /**
-   * Require email from user, adds the ['email'] scope if not present
+   * Require email from user, adds the ['email'] scope if not present.
    * @default false
    */
   emailRequired?: boolean;
   /**
-   * Maximum Authentication Age. If the elapsed time is greater than this value, the OP must attempt to actively re-authenticate the end-user.
-   * @default 0
-   * @see https://auth0.com/docs/authenticate/login/max-age-reauthentication
+   * Require profile from user, adds the ['identify'] scope if not present.
+   * @default true
    */
-  maxAge?: number;
+  profileRequired?: boolean;
   /**
-   * Login connection. If no connection is specified, it will redirect to the standard Auth0 login page and show the Login Widget.
-   * @default ''
-   * @see https://auth0.com/docs/api/authentication#social
-   * @example 'github'
+   * Discord OAuth Authorization URL
+   * @default 'https://discord.com/oauth2/authorize'
    */
-  connection?: string;
+  authorizationURL?: string;
+  /**
+   * Discord OAuth Token URL
+   * @default 'https://discord.com/api/oauth2/token'
+   */
+  tokenURL?: string;
+  /**
+   * Discord OAuth User fetch URL
+   * @default 'https://discord.com/api/users/@me'
+   */
+  userUrl?: string;
+
   /**
    * Extra authorization parameters to provide to the authorization URL
-   * @see https://auth0.com/docs/api/authentication#social
-   * @example { display: 'popup' }
+   * @see 'https://discord.com/developers/docs/topics/oauth2#authorization-code-grant'
+   * @example { allow_signup: 'true' }
    */
   authorizationParams?: Record<string, string>;
-};
-
-export interface Auth0UserData extends UserProps {
-  sub?: string;
-  name?: string;
-  given_name?: string;
-  family_name?: string;
-  middle_name?: string;
-  nickname?: string;
-  preferred_username?: string;
-  profile?: string;
-  picture?: string;
-  website?: string;
-  email?: string;
-  email_verified?: boolean;
-  gender?: string;
-  birthdate?: string;
-  zoneinfo?: string;
-  locale?: string;
-  phone_number?: string;
-  phone_number_verified?: boolean;
-  address?: {
-    country?: string;
-    [key: string]: any;
-  };
-  updated_at?: string;
 }
 
 /**
  * Initiates the Auth0 login process using OAuth.
  *
- * @param {Auth0Props} props - Configuration options for the Facebook OAuth process.
- * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: Auth0UserData | null }>}
+ * @param {DiscordProps} props - Configuration options for the Facebook OAuth process.
+ * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useAuth0(
-  props: Auth0Props
-): Promise<ResponseProps<Auth0UserData>> {
+
+export async function useDiscord(
+  props: DiscordProps
+): Promise<ResponseProps<UserProps>> {
   const {
     clientId,
     clientSecret,
-    domain,
-    audience,
-    scope = ["openid", "offline_access"],
+    scope = [],
     emailRequired,
-    maxAge,
-    connection,
+    profileRequired = true,
     authorizationParams = {},
+    authorizationURL = "https://discord.com/oauth2/authorize",
+    tokenURL = "https://discord.com/api/oauth2/token",
     redirectUri = window.location.origin,
+    userUrl = "https://discord.com/api/users/@me",
   } = props;
 
   if (!clientId || !clientSecret) {
     throw new Error("Client Id and Client Secret is Required");
   }
 
-  const authorizationURL = `https://${domain}/authorize`;
-  const tokenURL = `https://${domain}/oauth/token`;
-  const userUrl = `https://${domain}/userinfo`;
-
-  const finalScope =
+  const initScope =
     emailRequired && !scope.includes("email") ? [...scope, "email"] : scope;
+  const finalScope =
+    profileRequired && !initScope.includes("identify")
+      ? [...initScope, "identify"]
+      : initScope;
 
   const authParams = new URLSearchParams({
     response_type: "code",
-    client_id: clientId,
+    client_id: clientId || "",
     redirect_uri: redirectUri,
     scope: finalScope.join(" "),
-    audience: audience || "",
-    max_age: (maxAge || 0).toString(),
-    connection: connection || "",
     ...authorizationParams,
   });
 
   const popup = new PopupWindow({
     url: `${authorizationURL}?${authParams.toString()}`,
-    windowName: "Auth0 Login",
+    windowName: "Discord Login",
+    redirectUri: window.location.origin,
   });
 
   try {
@@ -145,14 +119,14 @@ export async function useAuth0(
     const response = await fetch(tokenURL, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
+      body: new URLSearchParams({
         client_id: clientId,
         client_secret: clientSecret,
+        grant_type: "authorization_code",
+        redirect_uri: redirectUri,
         code: params.code,
-        redirect_uri: window.location.origin,
       }),
     });
 
@@ -169,8 +143,8 @@ export async function useAuth0(
 
     const userResponse = await fetch(userUrl, {
       headers: {
-        Authorization: `${tokenType} ${accessToken}`,
-        Accept: "application/json",
+        "user-agent": "SSE Auth",
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
@@ -182,9 +156,9 @@ export async function useAuth0(
   }
 }
 
-export const Auth0Login: React.FC<LoginButtonProps<Auth0Props>> = ({
-  onSuccess,
+export const DiscordLogin: React.FC<LoginButtonProps<DiscordProps>> = ({
   onFailure,
+  onSuccess,
   ...props
 }) => {
   const [loading, setLoading] = React.useState(false);
@@ -192,7 +166,7 @@ export const Auth0Login: React.FC<LoginButtonProps<Auth0Props>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useAuth0(props);
+      const { error, accessToken, userData } = await useDiscord(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -207,15 +181,15 @@ export const Auth0Login: React.FC<LoginButtonProps<Auth0Props>> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with Auth0"}
+      {loading ? "Loading..." : "Login with Discord"}
     </TextButton>
   );
 };
 
-export const Auth0IconButton: React.FC<IconButtonProps<Auth0Props>> = ({
+export const DiscordIconButton: React.FC<IconButtonProps<DiscordProps>> = ({
   onFailure,
   onSuccess,
-  icon = Auth0Icon,
+  icon = DiscordIcon,
   variant,
   className,
   ...props
@@ -225,7 +199,7 @@ export const Auth0IconButton: React.FC<IconButtonProps<Auth0Props>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useAuth0(props);
+      const { error, accessToken, userData } = await useDiscord(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -247,7 +221,7 @@ export const Auth0IconButton: React.FC<IconButtonProps<Auth0Props>> = ({
       className={className}
       aria-label="Login with Auth0"
     >
-      {loading ? "Logging..." : "Login with Auth0"}
+      {loading ? "Logging..." : "Login with Discord"}
     </IconButton>
   );
 };

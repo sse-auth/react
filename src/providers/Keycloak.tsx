@@ -1,4 +1,7 @@
 import React from "react";
+import { KeycloakIcon } from "../assets/Icons";
+import { PopupWindow, parsePath } from "../utils";
+import { TextButton, IconButton } from "../components";
 import {
   IconButtonProps,
   LoginButtonProps,
@@ -6,80 +9,81 @@ import {
   SSEProps,
   UserProps,
 } from "./types";
-import { PopupWindow } from "../utils";
-import { TextButton, IconButton } from "../components";
-import { CognitoIcon } from "../assets/Icons";
 
-export type CognitoProps = SSEProps & {
+export interface KeycloakProps extends SSEProps {
   /**
-   * AWS Cognito App Client ID
+   * Keycloak OAuth Client ID
    */
   clientId?: string;
   /**
-   * AWS Cognito App Client Secret
+   * Keycloak OAuth Client Secret
    */
   clientSecret?: string;
   /**
-   * AWS Cognito User Pool ID
+   * Keycloak OAuth Server URL
+   * @example http://192.168.1.10:8080/auth
    */
-  userPoolId?: string;
+  serverUrl?: string;
   /**
-   * AWS Cognito Region
+   * Keycloak OAuth Realm
    */
-  region?: string;
+  realm?: string;
   /**
-   * AWS Cognito Scope
+   * Keycloak OAuth Scope
    * @default []
+   * @see https://www.keycloak.org/docs/latest/authorization_services/
+   * @example ['openid']
    */
   scope?: string[];
   /**
    * Extra authorization parameters to provide to the authorization URL
-   * @see https://docs.aws.amazon.com/cognito/latest/developerguide/authorization-endpoint.html
    */
   authorizationParams?: Record<string, string>;
-};
+}
 
 /**
- * Initiates the Cognito login process using OAuth.
+ * Initiates the Auth0 login process using OAuth.
  *
- * @param {CognitoProps} props - Configuration options for the Facebook OAuth process.
+ * @param {KeycloakProps} props - Configuration options for the Facebook OAuth process.
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useCognito(
-  props: CognitoProps
+export async function useKeyclock(
+  props: KeycloakProps
 ): Promise<ResponseProps<UserProps>> {
   const {
     clientId,
     clientSecret,
-    userPoolId,
-    region,
-    scope = ["openid", "profile"],
-    authorizationParams,
-    redirectUri,
+    serverUrl,
+    realm,
+    scope,
+    authorizationParams = {},
+    redirectUri = window.location.origin,
   } = props;
 
-  if (!clientId || !clientSecret || !userPoolId || !region) {
-    throw new Error(
-      "Client Id, Client Secret, User Pool Id, region is Required"
-    );
+  if (!clientId || !clientSecret || !serverUrl || !realm) {
+    throw new Error("Client Id, Client Secret, Server Url, Realm is Required");
   }
 
-  const authorizationUrl = `https://${userPoolId}.auth.${region}.amazoncognito.com/oauth2/authorize`;
-  const tokenURL = `https://${userPoolId}.auth.${region}.amazoncognito.com/oauth2/token`;
-  const userUrl = `https://${userPoolId}.auth.${region}.amazoncognito.com/oauth2/userInfo`;
+  const realmURL = `${serverUrl}/realms/${realm}`;
+  const authorizationURL = `${realmURL}/protocol/openid-connect/auth`;
+  const tokenURL = `${realmURL}/protocol/openid-connect/token`;
+  const userUrl = `${realmURL}/protocol/openid-connect/userinfo`;
+
+  const finalScope = scope || ["openid"];
 
   const authParams = new URLSearchParams({
     client_id: clientId,
-    redirect_uri: redirectUri || window.location.origin,
+    redirect_uri: redirectUri,
+    scope: finalScope.join(" "),
     response_type: "code",
-    scope: scope.join(" "),
     ...authorizationParams,
   });
 
   const popup = new PopupWindow({
-    url: `${authorizationUrl}?${authParams.toString()}`,
-    windowName: "Cognito Login",
+    url: `${authorizationURL}?${authParams.toString()}`,
+    windowName: "Keycloak Login",
+    redirectUri: window.location.origin,
   });
 
   try {
@@ -88,44 +92,52 @@ export async function useCognito(
       throw new Error(params.error);
     }
 
+    const popScope = !finalScope.includes("openid")
+      ? [...finalScope, "openid"]
+      : finalScope;
+
     const response = await fetch(tokenURL, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: `grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${redirectUri}&code=${params.code}`,
+      body: new URLSearchParams({
+        client_id: clientId,
+        client_secret: clientSecret,
+        grant_type: "authorization_code",
+        redirect_uri: parsePath(redirectUri).pathname,
+        code: params.code,
+      }),
     });
 
     const tokenData = await response.json();
 
     if (tokenData.error) {
       throw new Error(
-        tokenData.error_description ||
-          "Cognito login failed: Error retrieving access token"
+        tokenData.error?.data?.error_description ||
+          "Error retrieving access token"
       );
     }
 
-    const tokenType = tokenData.token_type;
     const accessToken = tokenData.access_token;
 
     const userResponse = await fetch(userUrl, {
       headers: {
-        Authorization: `${tokenType} ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         Accept: "application/json",
       },
     });
 
     const userData = await userResponse.json();
-
     return { error: null, accessToken, userData };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
 }
 
-export const CognitoLogin: React.FC<LoginButtonProps<CognitoProps>> = ({
-  onSuccess,
+export const KeycloakLogin: React.FC<LoginButtonProps<KeycloakProps>> = ({
   onFailure,
+  onSuccess,
   ...props
 }) => {
   const [loading, setLoading] = React.useState(false);
@@ -133,7 +145,7 @@ export const CognitoLogin: React.FC<LoginButtonProps<CognitoProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useCognito(props);
+      const { error, accessToken, userData } = await useKeyclock(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -148,15 +160,15 @@ export const CognitoLogin: React.FC<LoginButtonProps<CognitoProps>> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with Cognito"}
+      {loading ? "Loading..." : "Login with Keycloak"}
     </TextButton>
   );
 };
 
-export const CognitoIconButton: React.FC<IconButtonProps<CognitoProps>> = ({
+export const KeycloakIconButton: React.FC<IconButtonProps<KeycloakProps>> = ({
   onFailure,
   onSuccess,
-  icon = CognitoIcon,
+  icon = KeycloakIcon,
   variant,
   className,
   ...props
@@ -166,7 +178,7 @@ export const CognitoIconButton: React.FC<IconButtonProps<CognitoProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useCognito(props);
+      const { error, accessToken, userData } = await useKeyclock(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -186,9 +198,9 @@ export const CognitoIconButton: React.FC<IconButtonProps<CognitoProps>> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with Cognito"
+      aria-label="Login with Keycloak"
     >
-      {loading ? "Logging..." : "Login with Cognito"}
+      {loading ? "Logging..." : "Login with Keycloak"}
     </IconButton>
   );
 };
