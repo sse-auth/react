@@ -13,8 +13,8 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "sourceMap": true,
-    "inlineSources": true,
+    // "sourceMap": true,
+    // "inlineSources": true,
     "jsx": "react-jsxdev"
   },
   "include": ["./src", "index.ts", "buttons"]
