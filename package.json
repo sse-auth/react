@@ -12,12 +12,16 @@
       "types": "./dist/index.d.ts"
     },
     "./provider": {
-      "require": "./dist/providers.cjs.js",
-      "import": "./dist/providers.es.js",
+      "require": "./dist/src/providers/index.cjs.js",
+      "import": "./dist/src/providers/index.es.js",
       "types": "./dist/src/providers/index.d.ts"
     },
     "./css/*": "./dist/css/*",
-    "./provider/*": "./dist/src/providers/*",
+    "./provider/*": {
+      "require": "./dist/src/providers/*.cjs.js",
+      "import": "./dist/src/providers/*.es.js",
+      "types": "./dist/src/providers/*.d.ts"
+    },
     "./package.json": "./package.json",
     "./*": "./*"
   },
