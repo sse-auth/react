@@ -1,0 +1,129 @@
+{
+  "name": "@sse-auth/buttons",
+  "version": "1.1.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./Amazon": {
+      "import": "./dist/src/AmazonLoginButton.js",
+      "types": "./dist/src/AmazonLoginButton.d.ts"
+    },
+    "./Apple": {
+      "import": "./dist/src/AppleLoginButton.js",
+      "types": "./dist/src/AppleLoginButton.d.ts"
+    },
+    "./Buffer": {
+      "import": "./dist/src/BufferLoginButton.js",
+      "types": "./dist/src/BufferLoginButton.d.ts"
+    },
+    "./CreateButton": {
+      "import": "./dist/src/create-button.js",
+      "types": "./dist/src/create-button.d.ts"
+    },
+    "./Discord": {
+      "import": "./dist/src/DiscordLoginButton.js",
+      "types": "./dist/src/DiscordLoginButton.d.ts"
+    },
+    "./Dynamic": {
+      "import": "./dist/src/DynamicIcon.js",
+      "types": "./dist/src/DynamicIcon.d.ts"
+    },
+    "./Facebook": {
+      "import": "./dist/src/FacebookLoginButton.js",
+      "types": "./dist/src/FacebookLoginButton.d.ts"
+    },
+    "./Github": {
+      "import": "./dist/src/GithubLoginButton.js",
+      "types": "./dist/src/GithubLoginButton.d.ts"
+    },
+    "./Gitlab": {
+      "import": "./dist/src/GitlabLoginButton.js",
+      "types": "./dist/src/GitlabLoginButton.d.ts"
+    },
+    "./Google": {
+      "import": "./dist/src/GoogleLoginButton.js",
+      "types": "./dist/src/GoogleLoginButton.d.ts"
+    },
+    "./Instagram": {
+      "import": "./dist/src/InstagramLoginButton.js",
+      "types": "./dist/src/InstagramLoginButton.d.ts"
+    },
+    "./LinkedIn": {
+      "import": "./dist/src/LinkedInLoginButton.js",
+      "types": "./dist/src/LinkedInLoginButton.d.ts"
+    },
+    "./Metamask": {
+      "import": "./dist/src/MetamaskLoginButton.js",
+      "types": "./dist/src/MetamaskLoginButton.d.ts"
+    },
+    "./Microsoft": {
+      "import": "./dist/src/MicrosoftLoginButton.js",
+      "types": "./dist/src/MicrosoftLoginButton.d.ts"
+    },
+    "./Okta": {
+      "import": "./dist/src/OktaLoginButton.js",
+      "types": "./dist/src/OktaLoginButton.d.ts"
+    },
+    "./Slack": {
+      "import": "./dist/src/SlackLoginButton.js",
+      "types": "./dist/src/SlackLoginButton.d.ts"
+    },
+    "./Social": {
+      "import": "./dist/src/SocialLoginButton.js",
+      "types": "./dist/src/SocialLoginButton.d.ts"
+    },
+    "./Telegram": {
+      "import": "./dist/src/TelegramLoginButton.js",
+      "types": "./dist/src/TelegramLoginButton.d.ts"
+    },
+    "./TikTok": {
+      "import": "./dist/src/TikTokLoginButton.js",
+      "types": "./dist/src/TikTokLoginButton.d.ts"
+    },
+    "./Twitter": {
+      "import": "./dist/src/TwitterLoginButton.js",
+      "types": "./dist/src/TwitterLoginButton.d.ts"
+    },
+    "./X": {
+      "import": "./dist/src/XLoginButton.js",
+      "types": "./dist/src/XLoginButton.d.ts"
+    },
+    "./Yahoo": {
+      "import": "./dist/src/YahooLoginButton.js",
+      "types": "./dist/src/YahooLoginButton.d.ts"
+    },
+    "./Zalo": {
+      "import": "./dist/src/ZaloLoginButton.js",
+      "types": "./dist/src/ZaloLoginButton.d.ts"
+    },
+    "./*": "./*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sse-auth/react.git"
+  },
+  "author": "SSE World",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sse-auth/react/issues"
+  },
+  "homepage": "https://github.com/sse-auth/react#readme",
+  "description": "Login Buttons",
+  "peerDependencies": {
+    "react": "^16.0.0 || ^17.x || ^18.x"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "react": "^18.3.1"
+  }
+}

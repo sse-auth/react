@@ -1,7 +1,12 @@
 // import { IconProps } from "../../components";
 import React from "react";
 import { PopupWindow, toQuery } from "../utils";
-import { ResponseProps } from "./types";
+import {
+  IconButtonProps,
+  LoginButtonProps,
+  ResponseProps,
+  UserProps,
+} from "./types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { FaceBookIcon } from "../assets/Icons";
@@ -59,20 +64,6 @@ export type FacebookProps = {
   redirectUri?: string;
 };
 
-export interface FacebookLoginButtonProps extends FacebookProps {
-  onSuccess: (accessToken: string | object, userData: any) => void;
-  onFailure: (error: Error) => void;
-}
-
-export type FacebookIconButtonProps = FacebookProps & {
-  onSuccess: (accessToken: string | object, userData: any) => void;
-  onFailure: (error: Error) => void;
-  //   icon: IconProps["icon"];
-  icon?: React.ReactNode | string;
-  variant?: string;
-  className?: string;
-};
-
 /**
  * Initiates the Facebook login process using OAuth.
  *
@@ -82,7 +73,7 @@ export type FacebookIconButtonProps = FacebookProps & {
  */
 export async function useFacebook(
   props: FacebookProps
-): Promise<ResponseProps> {
+): Promise<ResponseProps<UserProps>> {
   const {
     clientId,
     clientSecret,
@@ -172,18 +163,7 @@ export async function useFacebook(
   }
 }
 
-/**
- * Renders a button that initiates the GitHub login process.
- *
- * This component handles the login flow by managing the loading state,
- * invoking the GitHub OAuth process, and calling the appropriate
- * success or failure callbacks based on the outcome of the login attempt.
- *
- * @param {FacebookLoginButtonProps} props - The properties for the GitHub login button,
- *                                         including onSuccess and onFailure callbacks.
- * @returns {JSX.Element} A React component that displays a button for logging in with GitHub.
- */
-export const FacebookLogin: React.FC<FacebookLoginButtonProps> = ({
+export const FacebookLogin: React.FC<LoginButtonProps<FacebookProps>> = ({
   onSuccess,
   onFailure,
   ...props
@@ -213,19 +193,7 @@ export const FacebookLogin: React.FC<FacebookLoginButtonProps> = ({
   );
 };
 
-/**
- * Renders a GitHub login button with an icon.
- *
- * This component manages the login flow by handling the loading state,
- * invoking the GitHub OAuth process, and calling the appropriate
- * success or failure callbacks based on the outcome of the login attempt.
- *
- * @param {FacebookIconButtonProps} props - The properties for the GitHub login button,
- *                                        including onSuccess and onFailure callbacks,
- *                                         an optional icon, variant, and className.
- * @returns {JSX.Element} A React component that displays an icon button for logging in with GitHub.
- */
-export const FacebookIconButton: React.FC<FacebookIconButtonProps> = ({
+export const FacebookIconButton: React.FC<IconButtonProps<FacebookProps>> = ({
   onFailure,
   onSuccess,
   icon = FaceBookIcon,

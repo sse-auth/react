@@ -1,7 +1,12 @@
 // import { IconProps } from "../../components";
 import React from "react";
 import { PopupWindow, toQuery } from "../utils";
-import { ResponseProps } from "./types";
+import {
+  IconButtonProps,
+  LoginButtonProps,
+  ResponseProps,
+  UserProps,
+} from "./types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { GithubIcon } from "../assets/Icons";
@@ -54,19 +59,41 @@ export type GithubProps = {
   authorizationParams?: Record<string, string>;
 };
 
-export interface GithubLoginButtonProps extends GithubProps {
-  onSuccess: (accessToken: string | object, userData: any) => void;
-  onFailure: (error: Error) => void;
+export interface GithubUserProps extends UserProps {
+  login: string;
+  id: number;
+  nodeId: string;
+  avatarUrl: string;
+  gravatarId: string;
+  url: string;
+  htmlUrl: string;
+  followersUrl: string;
+  followingUrl: string;
+  gistsUrl: string;
+  starredUrl: string;
+  subscriptionsUrl: string;
+  organizationsUrl: string;
+  reposUrl: string;
+  eventsUrl: string;
+  receivedEventsUrl: string;
+  type: string;
+  siteAdmin: boolean;
+  name: string;
+  company: string | null;
+  blog: string;
+  location: string | null;
+  email: string | null;
+  hireable: boolean | null;
+  bio: string | null;
+  twitterUsername: string | null;
+  notificationEmail: string | null;
+  publicRepos: number;
+  publicGists: number;
+  followers: number;
+  following: number;
+  createdAt: string;
+  updatedAt: string;
 }
-
-export type GithubIconButtonProps = GithubProps & {
-  onSuccess: (accessToken: string | object, userData: any) => void;
-  onFailure: (error: Error) => void;
-  //   icon: IconProps["icon"];
-  icon?: React.ReactNode | string;
-  variant?: string;
-  className?: string;
-};
 
 /**
  * Initiates the GitHub login process using OAuth.
@@ -75,7 +102,9 @@ export type GithubIconButtonProps = GithubProps & {
  * @returns {Promise<{ error: Error | null, accessToken: string | object | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useGithub(props: GithubProps): Promise<ResponseProps> {
+export async function useGithub(
+  props: GithubProps
+): Promise<ResponseProps<GithubUserProps>> {
   const {
     clientId,
     clientSecret,
@@ -156,18 +185,7 @@ export async function useGithub(props: GithubProps): Promise<ResponseProps> {
   }
 }
 
-/**
- * Renders a button that initiates the GitHub login process.
- *
- * This component handles the login flow by managing the loading state,
- * invoking the GitHub OAuth process, and calling the appropriate
- * success or failure callbacks based on the outcome of the login attempt.
- *
- * @param {GithubLoginButtonProps} props - The properties for the GitHub login button,
- *                                         including onSuccess and onFailure callbacks.
- * @returns {JSX.Element} A React component that displays a button for logging in with GitHub.
- */
-export const GithubLoginButton: React.FC<GithubLoginButtonProps> = ({
+export const GithubLoginButton: React.FC<LoginButtonProps<GithubProps>> = ({
   onSuccess,
   onFailure,
   ...props
@@ -197,19 +215,7 @@ export const GithubLoginButton: React.FC<GithubLoginButtonProps> = ({
   );
 };
 
-/**
- * Renders a GitHub login button with an icon.
- *
- * This component manages the login flow by handling the loading state,
- * invoking the GitHub OAuth process, and calling the appropriate
- * success or failure callbacks based on the outcome of the login attempt.
- *
- * @param {GithubIconButtonProps} props - The properties for the GitHub login button,
- *                                        including onSuccess and onFailure callbacks,
- *                                        an optional icon, variant, and className.
- * @returns {JSX.Element} A React component that displays an icon button for logging in with GitHub.
- */
-export const GithubIconButton: React.FC<GithubIconButtonProps> = ({
+export const GithubIconButton: React.FC<IconButtonProps<GithubProps>> = ({
   onFailure,
   onSuccess,
   icon = GithubIcon,
