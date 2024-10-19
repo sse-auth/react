@@ -1,5 +1,9 @@
-@use "scss/base";
-@use "scss/github-theme-variables";
-@use "scss/utils";
+// @use "scss/base";
+// @use "scss/github-theme-variables";
+// @use "scss/utils";
 
-@import "scss/Button";
+@use "./scss/base";
+@use "./scss/github-theme-variables";
+@use "./scss/utils";
+
+@forward "./scss/Button";
