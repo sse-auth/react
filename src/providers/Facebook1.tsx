@@ -73,7 +73,7 @@ export type FacebookProps = {
  */
 export async function useFacebook(
   props: FacebookProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

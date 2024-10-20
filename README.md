@@ -1,7 +1,6 @@
 # SSE Auth React
 
-## Note
-We have remover the the buttons. If you want to use it install `@sse-auth/buttons` package
+> **Note:** We have remover the the buttons. If you want to use it install `@sse-auth/buttons` package
 
 ### **Overview**
 
@@ -42,6 +41,7 @@ yarn install @sse-auth/react
 - Facebook
 - Auth0
 - BattleDotNet
+- Steam (Not Tested)
 
 ## Usage
 

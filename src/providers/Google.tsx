@@ -86,7 +86,7 @@ interface TokenResponse {
  */
 export async function useGoogle(
   props: GoogleProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

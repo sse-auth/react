@@ -69,7 +69,9 @@ export type BattleDotNetIconButtonProps = BattledotnetProps & {
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
 
-export async function useBattleDotNet(props: BattledotnetProps): Promise<ResponseProps<UserProps>> {
+export async function useBattleDotNet(
+  props: BattledotnetProps
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,
