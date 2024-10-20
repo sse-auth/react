@@ -68,7 +68,7 @@ export interface MicrosoftProps extends SSEProps {
  */
 export async function useMicrosoft(
   config: MicrosoftProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

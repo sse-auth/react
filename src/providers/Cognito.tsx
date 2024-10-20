@@ -46,9 +46,7 @@ export type CognitoProps = SSEProps & {
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useCognito(
-  props: CognitoProps
-): Promise<ResponseProps<UserProps>> {
+export async function useCognito(props: CognitoProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

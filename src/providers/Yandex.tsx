@@ -1,71 +1,67 @@
 import React from "react";
-import { LinkedInIcon } from "../assets/Icons";
-import { parseURL, PopupWindow, stringifyParsedURL } from "../utils";
-import { TextButton, IconButton } from "../components";
+import { IconButton, TextButton } from "../components";
+import { parsePath, PopupWindow, stringifyParsedURL } from "../utils";
 import {
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
   SSEProps,
-  UserProps,
 } from "./types";
+import { YandexIcon } from "../assets/Icons";
 
-export interface LinkedInProps extends SSEProps {
+export interface YandexProps extends SSEProps {
   /**
-   * LinkedIn OAuth Client ID
+   * Yandex OAuth Client ID
    */
   clientId?: string;
+
   /**
-   * LinkedIn OAuth Client Secret
+   * Yandex OAuth Client Secret
    */
   clientSecret?: string;
+
   /**
-   * LinkedIn OAuth Scope
-   * @default ['openid', 'profile', 'email']
-   * @example ['openid', 'profile']
+   * Yandex OAuth Scope
+   * @default []
+   * @see https://yandex.ru/dev/id/doc/en/codes/code-url#optional
+   * @example ["login:avatar", "login:birthday", "login:email", "login:info", "login:default_phone"]
    */
   scope?: string[];
+
   /**
-   * Require email from user, adds the ['email'] scope if not present
+   * Require email from user, adds the ['login:email'] scope if not present
    * @default false
    */
   emailRequired?: boolean;
 
   /**
-   * LinkedIn OAuth Authorization URL
-   * @default 'https://www.linkedin.com/oauth/v2/authorization'
+   * Yandex OAuth Authorization URL
+   * @default 'https://oauth.yandex.ru/authorize'
    */
   authorizationURL?: string;
+
   /**
-   * LinkedIn OAuth Token URL
-   * @default 'https://www.linkedin.com/oauth/v2/accessToken'
+   * Yandex OAuth Token URL
+   * @default 'https://oauth.yandex.ru/token'
    */
   tokenURL?: string;
+
   /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see https://docs.microsoft.com/en-us/linkedin/shared/authentication/authorization-code-flow?context=linkedin/context
+   * Yandex OAuth User URL
+   * @default 'https://login.yandex.ru/info'
    */
-  authorizationParams?: Record<string, string>;
+  userURL?: string;
 }
 
-/**
- * Initiates the Auth0 login process using OAuth.
- *
- * @param {LinkedInProps} props - Configuration options for the Facebook OAuth process.
- * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
- *          A promise that resolves with an object containing error, accessToken, and userData.
- */
-export async function useLinkedIn(
-  props: LinkedInProps
-): Promise<ResponseProps> {
+export async function useYandex(props: YandexProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,
     scope = [],
-    emailRequired,
-    authorizationURL = "https://www.linkedin.com/oauth/v2/authorization",
-    tokenURL = "https://www.linkedin.com/oauth/v2/accessToken",
-    authorizationParams = {},
+    emailRequired = false,
+    authorizationURL = "https://oauth.yandex.ru/authorize",
+    tokenURL = "https://oauth.yandex.ru/authorize",
+    userURL = "https://login.yandex.ru/info",
     redirectUri = window.location.origin,
   } = props;
 
@@ -73,31 +69,22 @@ export async function useLinkedIn(
     throw new Error("Client Id and Client Secret is Required");
   }
 
-  const initScope1 = scope || [];
-  const initScope2 = !initScope1.length
-    ? [...initScope1, "profile", "openid", "email"]
-    : initScope1;
   const finalScope =
-    emailRequired && !initScope2.includes("email")
-      ? [...initScope2, "email"]
-      : initScope2;
+    emailRequired && !scope.includes("login:email")
+      ? [...scope, "login:email"]
+      : scope;
 
   const authParams = new URLSearchParams({
     response_type: "code",
     client_id: clientId,
     redirect_uri: redirectUri,
     scope: finalScope.join(" "),
-    ...authorizationParams,
   });
 
   const popup = new PopupWindow({
     url: `${authorizationURL}?${authParams.toString()}`,
-    windowName: "LinkedIn Login",
-    redirectUri: redirectUri ?? window.location.origin,
+    windowName: "Yandex Login",
   });
-
-  const parsedRedirectUrl = parseURL(redirectUri);
-  parsedRedirectUrl.search = "";
 
   try {
     const params = await popup.open();
@@ -107,13 +94,13 @@ export async function useLinkedIn(
 
     const body = new URLSearchParams({
       grant_type: "authorization_code",
-      redirect_uri: stringifyParsedURL(parsedRedirectUrl),
       client_id: clientId,
       client_secret: clientSecret,
-      code: params.code,
+      redirect_uri: stringifyParsedURL(parsePath(redirectUri)),
+      code: `${params.code}`,
     });
 
-    const response = await fetch(tokenURL, {
+    const response = await fetch(`${tokenURL}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -132,10 +119,9 @@ export async function useLinkedIn(
 
     const accessToken = tokenData.access_token;
 
-    const userResponse = await fetch("https://api.linkedin.com/v2/userinfo", {
+    const userResponse = await fetch(userURL, {
       headers: {
-        "user-agent": "SSE Auth",
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `OAuth ${accessToken}`,
       },
     });
 
@@ -146,7 +132,7 @@ export async function useLinkedIn(
   }
 }
 
-export const LinkedInLogin: React.FC<LoginButtonProps<LinkedInProps>> = ({
+export const YandexLogin: React.FC<LoginButtonProps<YandexProps>> = ({
   onFailure,
   onSuccess,
   ...props
@@ -156,7 +142,7 @@ export const LinkedInLogin: React.FC<LoginButtonProps<LinkedInProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useLinkedIn(props);
+      const { error, accessToken, userData } = await useYandex(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -171,15 +157,15 @@ export const LinkedInLogin: React.FC<LoginButtonProps<LinkedInProps>> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with LinkedIn"}
+      {loading ? "Loading..." : "Login with Yandex"}
     </TextButton>
   );
 };
 
-export const LinkedInIconButton: React.FC<IconButtonProps<LinkedInProps>> = ({
+export const YandexIconButton: React.FC<IconButtonProps<YandexProps>> = ({
   onFailure,
   onSuccess,
-  icon = LinkedInIcon,
+  icon = YandexIcon,
   variant,
   className,
   ...props
@@ -189,7 +175,7 @@ export const LinkedInIconButton: React.FC<IconButtonProps<LinkedInProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useLinkedIn(props);
+      const { error, accessToken, userData } = await useYandex(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -209,9 +195,9 @@ export const LinkedInIconButton: React.FC<IconButtonProps<LinkedInProps>> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with Auth0"
+      aria-label="Login with Yandex"
     >
-      {loading ? "Logging..." : "Login with LinkedIn"}
+      {loading ? "Logging..." : "Login with Yandex"}
     </IconButton>
   );
 };

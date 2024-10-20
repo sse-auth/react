@@ -8,5 +8,11 @@ export * from "./Github";
 export * from "./Google";
 export * from "./Keycloak";
 export * from "./Linkedin";
+export * from "./Microsoft";
+export * from "./Paypal";
+export * from "./Spotify";
+export * from "./Steam";
+export * from "./Twitch";
+export * from "./X"
 export * from "./types";
 // export * from "./Facebook"

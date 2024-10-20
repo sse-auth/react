@@ -61,7 +61,7 @@ export interface SpotifyProps extends SSEProps {
  */
 export async function useSpotify(
   props: SpotifyProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

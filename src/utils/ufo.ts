@@ -27,6 +27,10 @@ interface ParsedHost {
   port: string;
 }
 
+interface ParseOptions {
+  strict?: boolean;
+}
+
 // Test
 const PROTOCOL_STRICT_REGEX = /^[\s\w\0+.-]{2,}:([/\\]{1,2})/;
 const PROTOCOL_REGEX = /^[\s\w\0+.-]{2,}:([/\\]{2})?/;
@@ -34,6 +38,8 @@ const PROTOCOL_RELATIVE_REGEX = /^([/\\]\s*){2,}[^/\\]/;
 const PROTOCOL_SCRIPT_RE = /^[\s\0]*(blob|data|javascript|vbscript):$/i;
 const TRAILING_SLASH_RE = /\/$|\/\?|\/#/;
 const JOIN_LEADING_SLASH_RE = /^\.?\//;
+const FILENAME_STRICT_REGEX = /\/([^/]+\.[^/]+)$/;
+const FILENAME_REGEX = /\/([^/]+)$/;
 
 // Code
 function hasProtocol(inputString: string, opts?: HasProtocolOptions): boolean;
@@ -120,6 +126,22 @@ export function parsePath(input = ""): ParsedURL {
   };
 }
 
+export function parseAuth(input: string = ""): ParsedAuth {
+  const [username, password] = input.split(":");
+  return {
+    username: decode(username),
+    password: decode(password),
+  };
+}
+
+export function parseHost(input = ""): ParsedHost {
+  const [hostname, port] = (input.match(/([^/:]*):?(\d+)?/) || []).splice(1);
+  return {
+    hostname: decode(hostname),
+    port,
+  };
+}
+
 export function stringifyParsedURL(parsed: Partial<ParsedURL>): string {
   const pathname = parsed.pathname || "";
   const search = parsed.search
@@ -133,4 +155,15 @@ export function stringifyParsedURL(parsed: Partial<ParsedURL>): string {
       ? (parsed.protocol || "") + "//"
       : "";
   return proto + auth + host + pathname + search + hash;
+}
+
+export function parseFilename(
+  input = "",
+  { strict }: ParseOptions
+): string | undefined {
+  const { pathname } = parseURL(input);
+  const matches = strict
+    ? pathname.match(FILENAME_STRICT_REGEX)
+    : pathname.match(FILENAME_REGEX);
+  return matches ? matches[1] : undefined;
 }
