@@ -8,5 +8,16 @@ export * from "./Github";
 export * from "./Google";
 export * from "./Keycloak";
 export * from "./Linkedin";
+<<<<<<< Updated upstream
 export * from "./types";
+=======
+export * from "./Microsoft";
+export * from "./Paypal";
+export * from "./Spotify";
+export * from "./Steam";
+export * from "./Twitch";
+export * from "./X"
+export * from "./Xsuaa"
+export * from "./Yandex"
+>>>>>>> Stashed changes
 // export * from "./Facebook"

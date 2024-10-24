@@ -1,67 +1,41 @@
 import React from "react";
-import { SpotifyIcon } from "../assets/Icons";
-import {
-  generateRandomString,
-  parsePath,
-  PopupWindow,
-  encodeBase64,
-} from "../utils";
-import { TextButton, IconButton } from "../components";
+import { IconButton, TextButton } from "../components";
+import { parsePath, PopupWindow } from "../utils";
 import {
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
-  SpotifyProps,
+  XSUAAProps,
 } from "../types";
+import { XsuaaIcon } from "../assets/Icons";
 
-/**
- * Initiates the Auth0 login process using OAuth.
- *
- * @param {SpotifyProps} props - Configuration options for the Facebook OAuth process.
- * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
- *          A promise that resolves with an object containing error, accessToken, and userData.
- */
-<<<<<<< Updated upstream
-export async function useSpotify(
-  props: SpotifyProps
-): Promise<ResponseProps<UserProps>> {
-=======
-export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
->>>>>>> Stashed changes
+export async function useXsuaa(props: XSUAAProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,
+    domain,
     scope = [],
-    emailRequired,
-    authorizationURL = "https://accounts.spotify.com/authorize",
-    tokenURL = "https://accounts.spotify.com/api/token",
-    authorizationParams = {},
     redirectUri = window.location.origin,
-    show_dialog = false,
   } = props;
 
-  if (!clientId || !clientSecret) {
-    throw new Error("Client Id and Client Secret is Required");
+  if (!clientId || !clientSecret || !domain) {
+    throw new Error("Client Id, Client Secret and Domain is Required");
   }
 
-  const finalScope =
-    emailRequired && !scope.includes("user-read-email")
-      ? [...scope, "user-read-email"]
-      : scope;
+  const authorizationURL = `https://${domain}/oauth/authorize`;
+  const tokenURL = `https://${domain}/oauth/token`;
+  const userURL = `https://${domain}/userinfo`;
 
   const authParams = new URLSearchParams({
     response_type: "code",
     client_id: clientId,
     redirect_uri: redirectUri,
-    scope: finalScope.join(" "),
-    state: generateRandomString(16),
-    ...authorizationParams,
+    scope: scope.join(" "),
   });
 
   const popup = new PopupWindow({
-    url: `${authorizationURL}?${authParams.toString()}&show_dialog=${show_dialog}`,
-    windowName: "Spotify Login",
-    redirectUri: redirectUri,
+    url: `${authorizationURL}?${authParams.toString()}`,
+    windowName: "XSUAA Login",
   });
 
   try {
@@ -70,25 +44,22 @@ export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
       throw new Error(params.error);
     }
 
-    const authCode = encodeBase64(`${clientId}:${clientSecret}`);
     const body = new URLSearchParams({
       grant_type: "authorization_code",
+      client_id: clientId,
+      client_secret: clientSecret,
       redirect_uri: parsePath(redirectUri).pathname,
-      code: params.code,
+      code: `${params.code}`,
     });
 
     const response = await fetch(`${tokenURL}`, {
       method: "POST",
       headers: {
-        Authorization: `Basic ${authCode}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: body,
     });
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
     const tokenData = await response.json();
 
     if (tokenData.error) {
@@ -98,11 +69,12 @@ export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
       );
     }
 
+    const tokenType = tokenData.token_type;
     const accessToken = tokenData.access_token;
 
-    const userResponse = await fetch(`"https://api.spotify.com/v1/me`, {
+    const userResponse = await fetch(userURL, {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `${tokenType} ${accessToken}`,
       },
     });
 
@@ -113,7 +85,7 @@ export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
   }
 }
 
-export const SpotifyLogin: React.FC<LoginButtonProps<SpotifyProps>> = ({
+export const XsuaaLogin: React.FC<LoginButtonProps<XSUAAProps>> = ({
   onFailure,
   onSuccess,
   ...props
@@ -123,7 +95,7 @@ export const SpotifyLogin: React.FC<LoginButtonProps<SpotifyProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useSpotify(props);
+      const { error, accessToken, userData } = await useXsuaa(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -138,15 +110,15 @@ export const SpotifyLogin: React.FC<LoginButtonProps<SpotifyProps>> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with Spotify"}
+      {loading ? "Loading..." : "Login with Xsuaa"}
     </TextButton>
   );
 };
 
-export const SpotifyIconButton: React.FC<IconButtonProps<SpotifyProps>> = ({
+export const XsuaaIconButton: React.FC<IconButtonProps<XSUAAProps>> = ({
   onFailure,
   onSuccess,
-  icon = SpotifyIcon,
+  icon = XsuaaIcon,
   variant,
   className,
   ...props
@@ -156,7 +128,7 @@ export const SpotifyIconButton: React.FC<IconButtonProps<SpotifyProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useSpotify(props);
+      const { error, accessToken, userData } = await useXsuaa(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -176,9 +148,9 @@ export const SpotifyIconButton: React.FC<IconButtonProps<SpotifyProps>> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with Spotify"
+      aria-label="Login with Xsuaa"
     >
-      {loading ? "Logging..." : "Login with Spotify"}
+      {loading ? "Logging..." : "Login with Xsuaa"}
     </IconButton>
   );
 };
