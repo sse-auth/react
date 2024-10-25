@@ -9,7 +9,17 @@ import {
   TwitchProps,
 } from "../types";
 
-export async function useTwitch(props: TwitchProps): Promise<ResponseProps> {
+export interface TwitchProfile extends Record<string, any> {
+  sub: string;
+  preferred_username: string;
+  email: string;
+  picture: string;
+  [key: string]: any;
+}
+
+export async function useTwitch(
+  props: TwitchProps
+): Promise<ResponseProps<TwitchProfile>> {
   const {
     clientId,
     clientSecret,
@@ -84,7 +94,7 @@ export async function useTwitch(props: TwitchProps): Promise<ResponseProps> {
     });
 
     const data = await userResponse.json();
-    const userData = data.data?.[0]
+    const userData = data.data?.[0];
 
     return { error: null, accessToken, userData };
   } catch (error) {
@@ -93,72 +103,71 @@ export async function useTwitch(props: TwitchProps): Promise<ResponseProps> {
 }
 
 export const TwitchLogin: React.FC<LoginButtonProps<TwitchProps>> = ({
-    onFailure,
-    onSuccess,
-    ...props
-  }) => {
-    const [loading, setLoading] = React.useState(false);
-  
-    const handleLogin = async () => {
-      setLoading(true);
-      try {
-        const { error, accessToken, userData } = await useTwitch(props);
-        if (error) {
-          onFailure(error as Error);
-        } else if (accessToken && userData) {
-          onSuccess(accessToken, userData);
-        }
-      } catch (error) {
+  onFailure,
+  onSuccess,
+  ...props
+}) => {
+  const [loading, setLoading] = React.useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      const { error, accessToken, userData } = await useTwitch(props);
+      if (error) {
         onFailure(error as Error);
-      } finally {
-        setLoading(false);
+      } else if (accessToken && userData) {
+        onSuccess(accessToken, userData);
       }
-    };
-  
-    return (
-      <TextButton onClick={handleLogin} disabled={loading}>
-        {loading ? "Loading..." : "Login with Twitch"}
-      </TextButton>
-    );
+    } catch (error) {
+      onFailure(error as Error);
+    } finally {
+      setLoading(false);
+    }
   };
-  
-  export const TwitchIconButton: React.FC<IconButtonProps<TwitchProps>> = ({
-    onFailure,
-    onSuccess,
-    icon = TwitchIcon,
-    variant,
-    className,
-    ...props
-  }) => {
-    const [loading, setLoading] = React.useState(false);
-  
-    const handleLogin = async () => {
-      setLoading(true);
-      try {
-        const { error, accessToken, userData } = await useTwitch(props);
-        if (error) {
-          onFailure(error as Error);
-        } else if (accessToken && userData) {
-          onSuccess(accessToken, userData);
-        }
-      } catch (error) {
+
+  return (
+    <TextButton onClick={handleLogin} disabled={loading}>
+      {loading ? "Loading..." : "Login with Twitch"}
+    </TextButton>
+  );
+};
+
+export const TwitchIconButton: React.FC<IconButtonProps<TwitchProps>> = ({
+  onFailure,
+  onSuccess,
+  icon = TwitchIcon,
+  variant,
+  className,
+  ...props
+}) => {
+  const [loading, setLoading] = React.useState(false);
+
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      const { error, accessToken, userData } = await useTwitch(props);
+      if (error) {
         onFailure(error as Error);
-      } finally {
-        setLoading(false);
+      } else if (accessToken && userData) {
+        onSuccess(accessToken, userData);
       }
-    };
-  
-    return (
-      <IconButton
-        icon={icon}
-        enabled={!loading}
-        variant={variant}
-        onClick={handleLogin}
-        className={className}
-        aria-label="Login with Twitch"
-      >
-        {loading ? "Logging..." : "Login with Twitch"}
-      </IconButton>
-    );
+    } catch (error) {
+      onFailure(error as Error);
+    } finally {
+      setLoading(false);
+    }
   };
-  
+
+  return (
+    <IconButton
+      icon={icon}
+      enabled={!loading}
+      variant={variant}
+      onClick={handleLogin}
+      className={className}
+      aria-label="Login with Twitch"
+    >
+      {loading ? "Logging..." : "Login with Twitch"}
+    </IconButton>
+  );
+};

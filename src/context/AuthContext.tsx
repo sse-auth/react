@@ -3,9 +3,7 @@ import { AuthContextType, ProviderContextMap, UserProps } from "../types";
 import { providerFunction } from "./function";
 
 // Create a context for authentication
-export const AuthContext = React.createContext<AuthContextType | undefined>(
-  undefined
-);
+export const AuthContext = React.createContext<AuthContextType | null>(null);
 
 export const SSEAuthProvider: React.FC<{
   providers: ProviderContextMap;
@@ -37,8 +35,23 @@ export const SSEAuthProvider: React.FC<{
     }
   };
 
+  const signOut = () => {
+    setError(null);
+    setIsAuthenticated(false);
+    setUserData(null);
+    setAccessToken(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, signIn, error, providers }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        signIn,
+        error,
+        signOut,
+        data: { user: userData, accessToken },
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

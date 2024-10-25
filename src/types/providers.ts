@@ -21,9 +21,9 @@ export interface ResponseObjProps<T extends UserProps = UserProps> {
   userData: T | null;
 }
 
-export type ResponseProps<T extends UserProps = UserProps, A extends string = string> = {
+export type ResponseProps<T extends UserProps = UserProps> = {
   error: Error | null | unknown;
-  accessToken: A | null;
+  accessToken: string | null;
   userData: T | null;
 };
 
@@ -113,32 +113,6 @@ export type Auth0Props = SSEProps & {
    */
   authorizationParams?: Record<string, string>;
 };
-
-export interface Auth0UserData extends UserProps {
-  sub?: string;
-  name?: string;
-  given_name?: string;
-  family_name?: string;
-  middle_name?: string;
-  nickname?: string;
-  preferred_username?: string;
-  profile?: string;
-  picture?: string;
-  website?: string;
-  email?: string;
-  email_verified?: boolean;
-  gender?: string;
-  birthdate?: string;
-  zoneinfo?: string;
-  locale?: string;
-  phone_number?: string;
-  phone_number_verified?: boolean;
-  address?: {
-    country?: string;
-    [key: string]: any;
-  };
-  updated_at?: string;
-}
 
 export type BattledotnetProps = {
   /**
@@ -310,42 +284,6 @@ export type GithubProps = {
   authorizationParams?: Record<string, string>;
 };
 
-export interface GithubUserProps extends UserProps {
-  login: string;
-  id: number;
-  nodeId: string;
-  avatarUrl: string;
-  gravatarId: string;
-  url: string;
-  htmlUrl: string;
-  followersUrl: string;
-  followingUrl: string;
-  gistsUrl: string;
-  starredUrl: string;
-  subscriptionsUrl: string;
-  organizationsUrl: string;
-  reposUrl: string;
-  eventsUrl: string;
-  receivedEventsUrl: string;
-  type: string;
-  siteAdmin: boolean;
-  name: string;
-  company: string | null;
-  blog: string;
-  location: string | null;
-  email: string | null;
-  hireable: boolean | null;
-  bio: string | null;
-  twitterUsername: string | null;
-  notificationEmail: string | null;
-  publicRepos: number;
-  publicGists: number;
-  followers: number;
-  following: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface GoogleProps extends SSEProps {
   /**
    * Google OAuth Client ID
@@ -460,6 +398,8 @@ export interface LinkedInProps extends SSEProps {
   authorizationParams?: Record<string, string>;
 }
 
+// Microsoft
+type MicrosoftProfilePhoto = 48 | 64 | 96 | 120 | 240 | 360 | 432 | 504 | 648;
 export interface MicrosoftProps extends SSEProps {
   /**
    * Microsoft OAuth Client ID
@@ -507,6 +447,8 @@ export interface MicrosoftProps extends SSEProps {
    * @see https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
    */
   redirectUrl?: string;
+  /** */
+  profilePhotoSize: MicrosoftProfilePhoto;
 }
 
 export interface PaypalProps extends SSEProps {

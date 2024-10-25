@@ -12,6 +12,7 @@ import {
   SpotifyProps,
   SteamProps,
   TwitchProps,
+  UserProps,
   XProps,
   XSUAAProps,
   YandexProps,
@@ -60,6 +61,11 @@ export type AuthContextType = {
     providerName: keyof ProviderContextMap,
     options?: { redirectTo?: string }
   ) => void;
+  signOut: () => void;
   error: Error | string | null | unknown;
-  providers: ProviderContextMap;
+  // providers: ProviderContextMap;
+  data: {
+    user: UserProps | null;
+    accessToken: string | null;
+  };
 };

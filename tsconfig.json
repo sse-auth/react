@@ -17,5 +17,6 @@
     // "inlineSources": true,
     "jsx": "react-jsxdev"
   },
-  "include": ["./src", "index.ts", "buttons"]
+  "include": ["./src", "index.ts"],
+  "exclude": ["./src/providers/Facebook"]
 }

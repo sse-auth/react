@@ -9,6 +9,18 @@ import {
   ResponseProps,
 } from "../types";
 
+export interface LinkedInProfile extends Record<string, any> {
+  sub?: string;
+  name?: string;
+  given_name?: string;
+  family_name?: string;
+  picture?: string;
+  locale?: string;
+  email?: string;
+  email_verified?: boolean;
+  [key: string]: any;
+}
+
 /**
  * Initiates the Auth0 login process using OAuth.
  *

@@ -1,27 +1,24 @@
 {
   "name": "@sse-auth/react",
-  "version": "1.4.0",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.es.js",
+  "version": "2.0.0",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "source": "index.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.cjs.js",
-      "import": "./dist/index.es.js",
+      "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./provider": {
-      "require": "./dist/src/providers/index.cjs.js",
-      "import": "./dist/src/providers/index.es.js",
+      "import": "./dist/src/providers/index.js",
       "types": "./dist/src/providers/index.d.ts"
     },
     "./css/*": "./dist/css/*",
     "./provider/*": {
-      "require": "./dist/src/providers/*.cjs.js",
-      "import": "./dist/src/providers/*.es.js",
+      "import": "./dist/src/providers/*.js",
       "types": "./dist/src/providers/*.d.ts"
     },
+    "./types/*": "./dist/src/types/*",
     "./package.json": "./package.json",
     "./*": "./*"
   },
@@ -30,13 +27,15 @@
     "src",
     "package.json",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "index.ts"
   ],
   "scripts": {
     "clean": "rimraf dist",
     "build:css": "sass --embed-sources ./src/style.scss ./dist/css/styles.css",
     "build": "rimraf dist && npm run build:css && cross-env NODE_ENV=production rollup -c",
-    "prepack": "rimraf dist && npm run build:css && cross-env NODE_ENV=production rollup -c"
+    "sse": "rimraf dist && npm run build:css && cross-env NODE_ENV=production rollup -c",
+    "tsc": "rimraf dist && tsc"
   },
   "author": "SSE World",
   "license": "MIT",

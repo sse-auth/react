@@ -9,6 +9,14 @@ import {
   ResponseProps,
 } from "../types";
 
+export interface MicrosoftEntraIDProfile extends Record<string, any> {
+  sub: string;
+  nickname: string;
+  email: string;
+  picture: string;
+  [key: string]: any;
+}
+
 /**
  * Initiates the Auth0 login process using OAuth.
  *
@@ -18,7 +26,7 @@ import {
  */
 export async function useMicrosoft(
   config: MicrosoftProps
-): Promise<ResponseProps> {
+): Promise<ResponseProps<MicrosoftEntraIDProfile>> {
   const {
     clientId,
     clientSecret,
@@ -29,13 +37,17 @@ export async function useMicrosoft(
     userURL = "https://graph.microsoft.com/v1.0/me",
     authorizationParams,
     redirectUrl = window.location.origin,
+    profilePhotoSize = 48,
   } = config;
 
   if (!clientId || !clientSecret || !tenant) {
     throw new Error("Client Id, Client Secret and Tenant is Required");
   }
 
-  const finalScope = scope && scope.length > 0 ? scope : ["User.Read"];
+  const finalScope =
+    scope && scope.length > 0
+      ? scope
+      : ["openid", "profile", "email", "User.Read"];
 
   const authParams = new URLSearchParams({
     response_type: "code",
@@ -85,7 +97,7 @@ export async function useMicrosoft(
     const tokenType = tokenData.token_type;
     const accessToken = tokenData.access_token;
 
-    const userResponse = await fetch(userURL, {
+    const userResponse = await fetch(`${userURL}`, {
       headers: {
         "user-agent": "SSE Auth",
         Authorization: `${tokenType} ${accessToken}`,

@@ -31,6 +31,25 @@ interface TokenResponse {
   error_uri?: string;
 }
 
+export interface GoogleProfile extends Record<string, any> {
+  aud?: string;
+  azp?: string;
+  email?: string;
+  email_verified?: boolean;
+  exp?: number;
+  family_name?: string;
+  given_name?: string;
+  hd?: string;
+  iat?: number;
+  iss?: string;
+  jti?: string;
+  locale?: string;
+  name?: string;
+  nbf?: number;
+  picture?: string;
+  sub?: string;
+}
+
 /**
  * Initiates the Auth0 login process using OAuth.
  *
@@ -38,7 +57,9 @@ interface TokenResponse {
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useGoogle(props: GoogleProps): Promise<ResponseProps> {
+export async function useGoogle(
+  props: GoogleProps
+): Promise<ResponseProps<GoogleProfile>> {
   const {
     clientId,
     clientSecret,

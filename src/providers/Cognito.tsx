@@ -9,6 +9,13 @@ import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import { CognitoIcon } from "../assets/Icons";
 
+export interface CognitoProfile extends Record<string, any> {
+  sub?: string;
+  name?: string;
+  email?: string;
+  picture?: string;
+}
+
 /**
  * Initiates the Cognito login process using OAuth.
  *
