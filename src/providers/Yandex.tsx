@@ -1,35 +1,23 @@
 import React from "react";
+import { IconButton, TextButton } from "../components";
+import { parsePath, PopupWindow, stringifyParsedURL } from "../utils";
 import {
-  ResponseProps,
-  LoginButtonProps,
   IconButtonProps,
-  Auth0Props,
-  Auth0UserData,
+  LoginButtonProps,
+  ResponseProps,
+  YandexProps,
 } from "../types";
-import { PopupWindow } from "../utils";
-import { TextButton, IconButton } from "../components";
-import { Auth0Icon } from "../assets/Icons";
+import { YandexIcon } from "../assets/Icons";
 
-/**
- * Initiates the Auth0 login process using OAuth.
- *
- * @param {Auth0Props} props - Configuration options for the Facebook OAuth process.
- * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: Auth0UserData | null }>}
- *          A promise that resolves with an object containing error, accessToken, and userData.
- */
-export async function useAuth0(
-  props: Auth0Props
-): Promise<ResponseProps<Auth0UserData>> {
+export async function useYandex(props: YandexProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,
-    domain,
-    audience,
-    scope = ["openid", "offline_access"],
-    emailRequired,
-    maxAge,
-    connection,
-    authorizationParams = {},
+    scope = [],
+    emailRequired = false,
+    authorizationURL = "https://oauth.yandex.ru/authorize",
+    tokenURL = "https://oauth.yandex.ru/authorize",
+    userURL = "https://login.yandex.ru/info",
     redirectUri = window.location.origin,
   } = props;
 
@@ -37,27 +25,21 @@ export async function useAuth0(
     throw new Error("Client Id and Client Secret is Required");
   }
 
-  const authorizationURL = `https://${domain}/authorize`;
-  const tokenURL = `https://${domain}/oauth/token`;
-  const userUrl = `https://${domain}/userinfo`;
-
   const finalScope =
-    emailRequired && !scope.includes("email") ? [...scope, "email"] : scope;
+    emailRequired && !scope.includes("login:email")
+      ? [...scope, "login:email"]
+      : scope;
 
   const authParams = new URLSearchParams({
     response_type: "code",
     client_id: clientId,
     redirect_uri: redirectUri,
     scope: finalScope.join(" "),
-    audience: audience || "",
-    max_age: (maxAge || 0).toString(),
-    connection: connection || "",
-    ...authorizationParams,
   });
 
   const popup = new PopupWindow({
     url: `${authorizationURL}?${authParams.toString()}`,
-    windowName: "Auth0 Login",
+    windowName: "Yandex Login",
   });
 
   try {
@@ -66,49 +48,49 @@ export async function useAuth0(
       throw new Error(params.error);
     }
 
-    const response = await fetch(tokenURL, {
+    const body = new URLSearchParams({
+      grant_type: "authorization_code",
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: stringifyParsedURL(parsePath(redirectUri)),
+      code: `${params.code}`,
+    });
+
+    const response = await fetch(`${tokenURL}`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: JSON.stringify({
-        grant_type: "authorization_code",
-        client_id: clientId,
-        client_secret: clientSecret,
-        code: params.code,
-        redirect_uri: window.location.origin,
-      }),
+      body: body,
     });
 
     const tokenData = await response.json();
 
     if (tokenData.error) {
       throw new Error(
-        tokenData.error_description || "Error retrieving access token"
+        tokenData.error?.data?.error_description ||
+          "Error retrieving access token"
       );
     }
 
-    const tokenType = tokenData.token_type;
     const accessToken = tokenData.access_token;
 
-    const userResponse = await fetch(userUrl, {
+    const userResponse = await fetch(userURL, {
       headers: {
-        Authorization: `${tokenType} ${accessToken}`,
-        Accept: "application/json",
+        Authorization: `OAuth ${accessToken}`,
       },
     });
 
     const userData = await userResponse.json();
-
     return { error: null, accessToken, userData };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
 }
 
-export const Auth0Login: React.FC<LoginButtonProps<Auth0Props>> = ({
-  onSuccess,
+export const YandexLogin: React.FC<LoginButtonProps<YandexProps>> = ({
   onFailure,
+  onSuccess,
   ...props
 }) => {
   const [loading, setLoading] = React.useState(false);
@@ -116,7 +98,7 @@ export const Auth0Login: React.FC<LoginButtonProps<Auth0Props>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useAuth0(props);
+      const { error, accessToken, userData } = await useYandex(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -131,15 +113,15 @@ export const Auth0Login: React.FC<LoginButtonProps<Auth0Props>> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with Auth0"}
+      {loading ? "Loading..." : "Login with Yandex"}
     </TextButton>
   );
 };
 
-export const Auth0IconButton: React.FC<IconButtonProps<Auth0Props>> = ({
+export const YandexIconButton: React.FC<IconButtonProps<YandexProps>> = ({
   onFailure,
   onSuccess,
-  icon = Auth0Icon,
+  icon = YandexIcon,
   variant,
   className,
   ...props
@@ -149,7 +131,7 @@ export const Auth0IconButton: React.FC<IconButtonProps<Auth0Props>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useAuth0(props);
+      const { error, accessToken, userData } = await useYandex(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -169,9 +151,9 @@ export const Auth0IconButton: React.FC<IconButtonProps<Auth0Props>> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with Auth0"
+      aria-label="Login with Yandex"
     >
-      {loading ? "Logging..." : "Login with Auth0"}
+      {loading ? "Logging..." : "Login with Yandex"}
     </IconButton>
   );
 };

@@ -2,98 +2,15 @@
 import React from "react";
 import { PopupWindow, toQuery } from "../utils";
 import {
+  GithubProps,
+  GithubUserProps,
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
-  UserProps,
-} from "./types";
+} from "../types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { GithubIcon } from "../assets/Icons";
-
-export type GithubProps = {
-  /**
-   * GitHub OAuth Client ID
-   */
-  clientId?: string;
-  /**
-   * GitHub OAuth Client Secret
-   */
-  clientSecret?: string;
-  /**
-   * GitHub OAuth Scope
-   * @default []
-   * @see https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
-   * @example ['user:email']
-   */
-  scope?: string[];
-  /**
-   * Require email from user, adds the ['user:email'] scope if not present
-   * @default false
-   */
-  emailRequired?: boolean;
-
-  /**
-   * GitHub OAuth Authorization URL
-   * @default 'https://github.com/login/oauth/authorize'
-   */
-  authorizationURL?: string;
-
-  /**
-   * GitHub OAuth Token URL
-   * @default 'https://github.com/login/oauth/access_token'
-   */
-  tokenURL?: string;
-
-  /**
-   * GitHub OAuth Token URL
-   * @default 'https://api.github.com/user'
-   */
-  userUrl?: string;
-
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#1-request-a-users-github-identity
-   * @example { allow_signup: 'true' }
-   */
-  authorizationParams?: Record<string, string>;
-};
-
-export interface GithubUserProps extends UserProps {
-  login: string;
-  id: number;
-  nodeId: string;
-  avatarUrl: string;
-  gravatarId: string;
-  url: string;
-  htmlUrl: string;
-  followersUrl: string;
-  followingUrl: string;
-  gistsUrl: string;
-  starredUrl: string;
-  subscriptionsUrl: string;
-  organizationsUrl: string;
-  reposUrl: string;
-  eventsUrl: string;
-  receivedEventsUrl: string;
-  type: string;
-  siteAdmin: boolean;
-  name: string;
-  company: string | null;
-  blog: string;
-  location: string | null;
-  email: string | null;
-  hireable: boolean | null;
-  bio: string | null;
-  twitterUsername: string | null;
-  notificationEmail: string | null;
-  publicRepos: number;
-  publicGists: number;
-  followers: number;
-  following: number;
-  createdAt: string;
-  updatedAt: string;
-}
 
 /**
  * Initiates the GitHub login process using OAuth.

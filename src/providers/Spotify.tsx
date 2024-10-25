@@ -1,56 +1,18 @@
 import React from "react";
 import { SpotifyIcon } from "../assets/Icons";
-import { generateRandomString, parsePath, PopupWindow, encodeBase64 } from "../utils";
+import {
+  generateRandomString,
+  parsePath,
+  PopupWindow,
+  encodeBase64,
+} from "../utils";
 import { TextButton, IconButton } from "../components";
-import { IconButtonProps, LoginButtonProps, ResponseProps, SSEProps, UserProps } from "./types";
-
-export interface SpotifyProps extends SSEProps {
-  /**
-   * Spotify OAuth Client ID
-   */
-  clientId?: string;
-  /**
-   * Spotify OAuth Client Secret
-   */
-  clientSecret?: string;
-  /**
-   * Spotify OAuth Scope
-   * @default []
-   * @see https://developer.spotify.com/documentation/web-api/concepts/scopes
-   * @example ['user-read-email']
-   */
-  scope?: string[];
-  /**
-   * Require email from user, adds the ['user-read-email'] scope if not present
-   * @default false
-   */
-  emailRequired?: boolean;
-
-  /**
-   * Spotify OAuth Authorization URL
-   * @default 'https://accounts.spotify.com/authorize'
-   */
-  authorizationURL?: string;
-
-  /**
-   * Spotify OAuth Token URL
-   * @default 'https://accounts.spotify.com/api/token'
-   */
-  tokenURL?: string;
-
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see 'https://developer.spotify.com/documentation/web-api/tutorials/code-flow'
-   * @example { show_dialog: 'true' }
-   */
-  authorizationParams?: Record<string, string>;
-
-  /**
-   * direct redirection or not
-   * @default false
-   */
-  show_dialog?: boolean;
-}
+import {
+  IconButtonProps,
+  LoginButtonProps,
+  ResponseProps,
+  SpotifyProps,
+} from "../types";
 
 /**
  * Initiates the Auth0 login process using OAuth.
@@ -59,9 +21,7 @@ export interface SpotifyProps extends SSEProps {
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useSpotify(
-  props: SpotifyProps
-): Promise<ResponseProps<UserProps>> {
+export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

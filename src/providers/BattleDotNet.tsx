@@ -1,65 +1,14 @@
 import React from "react";
-import { ResponseProps, UserProps } from "./types";
+import {
+  BattledotnetProps,
+  IconButtonProps,
+  LoginButtonProps,
+  ResponseProps,
+} from "../types";
 import { PopupWindow } from "../utils";
 import { randomUUID } from "crypto";
 import { TextButton, IconButton } from "../components";
 import { BattleDotNetIcon } from "../assets/Icons";
-
-export type BattledotnetProps = {
-  /**
-   * Battle.net OAuth Client ID
-   */
-  clientId?: string;
-  /**
-   * Battle.net OAuth Client Secret
-   */
-  clientSecret?: string;
-  /**
-   * Battle.net OAuth Scope
-   * @default []
-   * @see https://develop.battle.net/documentation/guides/using-oauth
-   * @example ['openid', 'wow.profile', 'sc2.profile', 'd3.profile']
-   */
-  scope?: string[];
-  /**
-   * Battle.net OAuth Region
-   * @default EU
-   * @see https://develop.battle.net/documentation/guides/using-oauth
-   * @example EU (possible values: US, EU, APAC)
-   */
-  region?: string;
-  /**
-   * Battle.net OAuth Authorization URL
-   * @default 'https://oauth.battle.net/authorize'
-   */
-  // authorizationURL?: string;
-  /**
-   * Battle.net OAuth Token URL
-   * @default 'https://oauth.battle.net/token'
-   */
-  // tokenURL?: string;
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see https://develop.battle.net/documentation/guides/using-oauth/authorization-code-flow
-   */
-  authorizationParams?: Record<string, string>;
-  /** */
-  redirectUri?: string;
-};
-
-export interface BattleDotNetLoginButtonProps extends BattledotnetProps {
-  onSuccess: (accessToken: string, userData: any) => void;
-  onFailure: (error: Error) => void;
-}
-
-export type BattleDotNetIconButtonProps = BattledotnetProps & {
-  onSuccess: (accessToken: string, userData: any) => void;
-  onFailure: (error: Error) => void;
-  //   icon: IconProps["icon"];
-  icon?: React.ReactNode | string;
-  variant?: string;
-  className?: string;
-};
 
 /**
  * Initiates the GitHub login process using OAuth.
@@ -69,7 +18,9 @@ export type BattleDotNetIconButtonProps = BattledotnetProps & {
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
 
-export async function useBattleDotNet(props: BattledotnetProps): Promise<ResponseProps<UserProps>> {
+export async function useBattleDotNet(
+  props: BattledotnetProps
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,
@@ -162,11 +113,9 @@ export async function useBattleDotNet(props: BattledotnetProps): Promise<Respons
   }
 }
 
-export const BattleDotNetLogin: React.FC<BattleDotNetLoginButtonProps> = ({
-  onSuccess,
-  onFailure,
-  ...props
-}) => {
+export const BattleDotNetLogin: React.FC<
+  LoginButtonProps<BattledotnetProps>
+> = ({ onSuccess, onFailure, ...props }) => {
   const [loading, setLoading] = React.useState(false);
 
   const handleLogin = async () => {
@@ -192,7 +141,9 @@ export const BattleDotNetLogin: React.FC<BattleDotNetLoginButtonProps> = ({
   );
 };
 
-export const BattleDotNetIconButton: React.FC<BattleDotNetIconButtonProps> = ({
+export const BattleDotNetIconButton: React.FC<
+  IconButtonProps<BattledotnetProps>
+> = ({
   onFailure,
   onSuccess,
   icon = BattleDotNetIcon,

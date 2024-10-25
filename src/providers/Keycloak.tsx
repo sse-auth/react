@@ -4,42 +4,10 @@ import { PopupWindow, parsePath } from "../utils";
 import { TextButton, IconButton } from "../components";
 import {
   IconButtonProps,
+  KeycloakProps,
   LoginButtonProps,
   ResponseProps,
-  SSEProps,
-  UserProps,
-} from "./types";
-
-export interface KeycloakProps extends SSEProps {
-  /**
-   * Keycloak OAuth Client ID
-   */
-  clientId?: string;
-  /**
-   * Keycloak OAuth Client Secret
-   */
-  clientSecret?: string;
-  /**
-   * Keycloak OAuth Server URL
-   * @example http://192.168.1.10:8080/auth
-   */
-  serverUrl?: string;
-  /**
-   * Keycloak OAuth Realm
-   */
-  realm?: string;
-  /**
-   * Keycloak OAuth Scope
-   * @default []
-   * @see https://www.keycloak.org/docs/latest/authorization_services/
-   * @example ['openid']
-   */
-  scope?: string[];
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   */
-  authorizationParams?: Record<string, string>;
-}
+} from "../types";
 
 /**
  * Initiates the Auth0 login process using OAuth.
@@ -50,7 +18,7 @@ export interface KeycloakProps extends SSEProps {
  */
 export async function useKeyclock(
   props: KeycloakProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

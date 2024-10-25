@@ -1,32 +1,33 @@
 import React from "react";
-import { LinkedInIcon } from "../assets/Icons";
-import { parseURL, PopupWindow, stringifyParsedURL } from "../utils";
-import { TextButton, IconButton } from "../components";
+import { IconButton, TextButton } from "../components";
+import {
+  encodeBase64,
+  generateRandomUUID,
+  parsePath,
+  PopupWindow,
+} from "../utils";
 import {
   IconButtonProps,
-  LinkedInProps,
   LoginButtonProps,
   ResponseProps,
+  SSEProps,
+  XProps,
 } from "../types";
+import { XIcon } from "../assets/Icons";
 
-/**
- * Initiates the Auth0 login process using OAuth.
- *
- * @param {LinkedInProps} props - Configuration options for the Facebook OAuth process.
- * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
- *          A promise that resolves with an object containing error, accessToken, and userData.
- */
-export async function useLinkedIn(
-  props: LinkedInProps
-): Promise<ResponseProps> {
+export async function useX(props: XProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,
-    scope = [],
-    emailRequired,
-    authorizationURL = "https://www.linkedin.com/oauth/v2/authorization",
-    tokenURL = "https://www.linkedin.com/oauth/v2/accessToken",
-    authorizationParams = {},
+    scope,
+    emailRequired = false,
+    authorizationURL = "https://x.com/i/oauth2/authorize",
+    tokenURL = "https://api.x.com/2/oauth2/token",
+    userURL = "https://api.x.com/2/users/me",
+    authorizationParams = {
+      state: generateRandomUUID(),
+      code_challenge: generateRandomUUID(),
+    },
     redirectUri = window.location.origin,
   } = props;
 
@@ -34,14 +35,7 @@ export async function useLinkedIn(
     throw new Error("Client Id and Client Secret is Required");
   }
 
-  const initScope1 = scope || [];
-  const initScope2 = !initScope1.length
-    ? [...initScope1, "profile", "openid", "email"]
-    : initScope1;
-  const finalScope =
-    emailRequired && !initScope2.includes("email")
-      ? [...initScope2, "email"]
-      : initScope2;
+  const finalScope = scope || ["tweet.read", "users.read", "offline.access"];
 
   const authParams = new URLSearchParams({
     response_type: "code",
@@ -53,12 +47,8 @@ export async function useLinkedIn(
 
   const popup = new PopupWindow({
     url: `${authorizationURL}?${authParams.toString()}`,
-    windowName: "LinkedIn Login",
-    redirectUri: redirectUri ?? window.location.origin,
+    windowName: "X Login",
   });
-
-  const parsedRedirectUrl = parseURL(redirectUri);
-  parsedRedirectUrl.search = "";
 
   try {
     const params = await popup.open();
@@ -66,17 +56,18 @@ export async function useLinkedIn(
       throw new Error(params.error);
     }
 
+    const authCode = encodeBase64(`${clientId}:${clientSecret}`);
     const body = new URLSearchParams({
       grant_type: "authorization_code",
-      redirect_uri: stringifyParsedURL(parsedRedirectUrl),
-      client_id: clientId,
-      client_secret: clientSecret,
+      code_verifier: authorizationParams.code_challenge,
+      redirect_uri: parsePath(redirectUri).pathname,
       code: params.code,
     });
 
-    const response = await fetch(tokenURL, {
+    const response = await fetch(`${tokenURL}`, {
       method: "POST",
       headers: {
+        Authorization: `Basic ${authCode}`,
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: body,
@@ -93,21 +84,50 @@ export async function useLinkedIn(
 
     const accessToken = tokenData.access_token;
 
-    const userResponse = await fetch("https://api.linkedin.com/v2/userinfo", {
+    const userFields =
+      "description,id,name,profile_image_url,username,verified,verified_type";
+    const userResponse = await fetch(`${userURL}?user.fields=${userFields}`, {
       headers: {
-        "user-agent": "SSE Auth",
         Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
     });
 
-    const userData = await userResponse.json();
-    return { error: null, accessToken, userData };
+    const user = await userResponse.json();
+    if (emailRequired) {
+      const emailResponse = await fetch(
+        "https://api.x.com/1.1/account/verify_credentials.json?include_email=true&skip_status=true",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!emailResponse.ok) {
+        return { error: "Unable to fetch Email", accessToken, userData: user };
+      }
+
+      const emailData = await emailResponse.json();
+
+      if (emailData && emailData.email) {
+        user.email = emailData.email;
+      } else {
+        return {
+          error: "X login failed: no user email found",
+          accessToken,
+          userData: user,
+        };
+      }
+    }
+
+    return { error: null, accessToken, userData: user };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
 }
 
-export const LinkedInLogin: React.FC<LoginButtonProps<LinkedInProps>> = ({
+export const XLogin: React.FC<LoginButtonProps<XProps>> = ({
   onFailure,
   onSuccess,
   ...props
@@ -117,7 +137,7 @@ export const LinkedInLogin: React.FC<LoginButtonProps<LinkedInProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useLinkedIn(props);
+      const { error, accessToken, userData } = await useX(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -132,15 +152,15 @@ export const LinkedInLogin: React.FC<LoginButtonProps<LinkedInProps>> = ({
 
   return (
     <TextButton onClick={handleLogin} disabled={loading}>
-      {loading ? "Loading..." : "Login with LinkedIn"}
+      {loading ? "Loading..." : "Login with X"}
     </TextButton>
   );
 };
 
-export const LinkedInIconButton: React.FC<IconButtonProps<LinkedInProps>> = ({
+export const XIconButton: React.FC<IconButtonProps<XProps>> = ({
   onFailure,
   onSuccess,
-  icon = LinkedInIcon,
+  icon = XIcon,
   variant,
   className,
   ...props
@@ -150,7 +170,7 @@ export const LinkedInIconButton: React.FC<IconButtonProps<LinkedInProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useLinkedIn(props);
+      const { error, accessToken, userData } = await useX(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
@@ -170,9 +190,9 @@ export const LinkedInIconButton: React.FC<IconButtonProps<LinkedInProps>> = ({
       variant={variant}
       onClick={handleLogin}
       className={className}
-      aria-label="Login with Auth0"
+      aria-label="Login with X"
     >
-      {loading ? "Logging..." : "Login with LinkedIn"}
+      {loading ? "Logging..." : "Login with X"}
     </IconButton>
   );
 };

@@ -4,56 +4,10 @@ import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import {
   ResponseProps,
-  UserProps,
   LoginButtonProps,
   IconButtonProps,
-  SSEProps,
-} from "./types";
-
-export interface GoogleProps extends SSEProps {
-  /**
-   * Google OAuth Client ID
-   */
-  clientId?: string;
-
-  /**
-   * Google OAuth Client Secret
-   */
-  clientSecret?: string;
-
-  /**
-   * Google OAuth Scope
-   * @default []
-   * @see https://developers.google.com/identity/protocols/oauth2/scopes#google-sign-in
-   * @example ['email', 'openid', 'profile']
-   */
-  scope?: string[];
-
-  /**
-   * Google OAuth Authorization URL
-   * @default 'https://accounts.google.com/o/oauth2/v2/auth'
-   */
-  authorizationURL?: string;
-
-  /**
-   * Google OAuth Token URL
-   * @default 'https://oauth2.googleapis.com/token'
-   */
-  tokenURL?: string;
-
-  /**
-   * Google OAuth User URL
-   * @default 'https://www.googleapis.com/oauth2/v3/userinfo'
-   */
-  userURL?: string;
-
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see https://developers.google.com/identity/protocols/oauth2/web-server#httprest_3
-   * @example { access_type: 'offline' }
-   */
-  authorizationParams?: Record<string, string>;
-}
+  GoogleProps,
+} from "../types";
 
 type ErrorCode =
   | "invalid_request"
@@ -84,9 +38,7 @@ interface TokenResponse {
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useGoogle(
-  props: GoogleProps
-): Promise<ResponseProps<UserProps>> {
+export async function useGoogle(props: GoogleProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

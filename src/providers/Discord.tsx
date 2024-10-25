@@ -4,62 +4,10 @@ import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import {
   ResponseProps,
-  UserProps,
   LoginButtonProps,
   IconButtonProps,
-  SSEProps,
-} from "./types";
-
-export interface DiscordProps extends SSEProps {
-  /**
-   * Discord OAuth Client ID
-   */
-  clientId?: string;
-  /**
-   * Discord OAuth Client Secret
-   */
-  clientSecret?: string;
-  /**
-   * Discord OAuth Scope
-   * @default []
-   * @see https://discord.com/developers/docs/topics/oauth2#shared-resources-oauth2-scopes
-   * @example ['identify', 'email']
-   * Without the identify scope the user will not be returned.
-   */
-  scope?: string[];
-  /**
-   * Require email from user, adds the ['email'] scope if not present.
-   * @default false
-   */
-  emailRequired?: boolean;
-  /**
-   * Require profile from user, adds the ['identify'] scope if not present.
-   * @default true
-   */
-  profileRequired?: boolean;
-  /**
-   * Discord OAuth Authorization URL
-   * @default 'https://discord.com/oauth2/authorize'
-   */
-  authorizationURL?: string;
-  /**
-   * Discord OAuth Token URL
-   * @default 'https://discord.com/api/oauth2/token'
-   */
-  tokenURL?: string;
-  /**
-   * Discord OAuth User fetch URL
-   * @default 'https://discord.com/api/users/@me'
-   */
-  userUrl?: string;
-
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see 'https://discord.com/developers/docs/topics/oauth2#authorization-code-grant'
-   * @example { allow_signup: 'true' }
-   */
-  authorizationParams?: Record<string, string>;
-}
+  DiscordProps,
+} from "../types";
 
 /**
  * Initiates the Auth0 login process using OAuth.
@@ -69,9 +17,7 @@ export interface DiscordProps extends SSEProps {
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
 
-export async function useDiscord(
-  props: DiscordProps
-): Promise<ResponseProps<UserProps>> {
+export async function useDiscord(props: DiscordProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

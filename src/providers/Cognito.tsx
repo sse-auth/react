@@ -1,43 +1,13 @@
 import React from "react";
 import {
+  CognitoProps,
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
-  SSEProps,
-  UserProps,
-} from "./types";
+} from "../types";
 import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import { CognitoIcon } from "../assets/Icons";
-
-export type CognitoProps = SSEProps & {
-  /**
-   * AWS Cognito App Client ID
-   */
-  clientId?: string;
-  /**
-   * AWS Cognito App Client Secret
-   */
-  clientSecret?: string;
-  /**
-   * AWS Cognito User Pool ID
-   */
-  userPoolId?: string;
-  /**
-   * AWS Cognito Region
-   */
-  region?: string;
-  /**
-   * AWS Cognito Scope
-   * @default []
-   */
-  scope?: string[];
-  /**
-   * Extra authorization parameters to provide to the authorization URL
-   * @see https://docs.aws.amazon.com/cognito/latest/developerguide/authorization-endpoint.html
-   */
-  authorizationParams?: Record<string, string>;
-};
 
 /**
  * Initiates the Cognito login process using OAuth.
@@ -46,9 +16,7 @@ export type CognitoProps = SSEProps & {
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useCognito(
-  props: CognitoProps
-): Promise<ResponseProps<UserProps>> {
+export async function useCognito(props: CognitoProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,
