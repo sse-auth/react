@@ -69,9 +69,7 @@ export interface DiscordProps extends SSEProps {
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
 
-export async function useDiscord(
-  props: DiscordProps
-): Promise<ResponseProps<UserProps>> {
+export async function useDiscord(props: DiscordProps): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

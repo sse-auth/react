@@ -5,10 +5,32 @@ import {
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
+<<<<<<< HEAD
   SteamProps,
 } from "../types";
 import { SteamIcon } from "../assets/Icons";
 
+=======
+  SSEProps,
+  UserProps,
+} from "./types";
+import { SteamIcon } from "../assets/Icons";
+
+export interface SteamProps extends SSEProps {
+  /**
+   * Steam API Key
+   * @see https://steamcommunity.com/dev
+   */
+  apiKey?: string;
+
+  /**
+   * Steam Open ID OAuth Authorization URL
+   * @default 'https://steamcommunity.com/openid/login'
+   */
+  authorizationURL?: string;
+}
+
+>>>>>>> 07c50b15d354c2dbaa50302ec3053fe9ee1b185a
 export async function useSteam(
   props: SteamProps
 ): Promise<ResponseProps> {

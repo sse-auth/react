@@ -15,13 +15,13 @@ export interface SSEProps {
   redirectUri?: string;
 }
 
-export interface ResponseObjProps {
+export interface ResponseObjProps<T extends UserProps = UserProps> {
   error: Error | null | unknown;
   accessToken: string | null | object;
-  userData: UserProps | null;
+  userData: T | null;
 }
 
-export type ResponseProps<T> = {
+export type ResponseProps<T extends UserProps = UserProps> = {
   error: Error | null | unknown;
   accessToken: string | null;
   userData: T | null;

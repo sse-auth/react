@@ -7,7 +7,7 @@ merge of your pull request!
 **NOTE**:
 
 - It's a good idea to open an issue first to discuss potential changes.
-- Please make sure that you are _NOT_ opening a PR to fix a potential security vulnerability. Instead, please follow the [Security guidelines](https://github.com/sse-auth/react/.github/blob/master/SECURITY.md) to disclose the issue to us confidentially.
+- Please make sure that you are _NOT_ opening a PR to fix a potential security vulnerability. Instead, please follow the [Security guidelines](https://github.com/sse-auth/react/blob/master/SECURITY.md) to disclose the issue to us confidentially.
 
 -->
 
@@ -17,20 +17,21 @@ merge of your pull request!
 
 ## 🧢 Checklist
 
-- [ ] Documentation
+<!-- - [ ] Documentation -->
 - [ ] Tests
+- [ ] Tested by more than One
 - [ ] Ready to be merged
 
 ## 🎫 Affected issues
 
 <!--
-Please [scout and link issues](https://github.com/sse-auth/react/next-auth/issues) that might be solved by this PR. And include text like the following to close them automatically when this is merged:
+Please [scout and link issues](https://github.com/sse-auth/react/issues) that might be solved by this PR. And include text like the following to close them automatically when this is merged:
 
 Fixes: INSERT_ISSUE_LINK_HERE
 -->
 
 ## 📌 Resources
 
-- [Security guidelines](https://github.com/sse-auth/react/.github/blob/master/SECURITY.md)
-- [Code of conduct](https://github.com/sse-auth/react/.github/blob/master/CODE_OF_CONDUCT.md)
+- [Security guidelines](https://github.com/sse-auth/react/blob/master/SECURITY.md)
+- [Code of conduct](https://github.com/sse-auth/react/blob/master/CODE_OF_CONDUCT.md)
 - [Contributing to Open Source](https://kcd.im/pull-request)

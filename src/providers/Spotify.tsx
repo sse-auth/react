@@ -24,10 +24,14 @@ import {
 <<<<<<< Updated upstream
 export async function useSpotify(
   props: SpotifyProps
+<<<<<<< HEAD
 ): Promise<ResponseProps<UserProps>> {
 =======
 export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
 >>>>>>> Stashed changes
+=======
+): Promise<ResponseProps> {
+>>>>>>> 07c50b15d354c2dbaa50302ec3053fe9ee1b185a
   const {
     clientId,
     clientSecret,
@@ -85,10 +89,14 @@ export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
       },
       body: body,
     });
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 
 >>>>>>> Stashed changes
+=======
+    
+>>>>>>> 07c50b15d354c2dbaa50302ec3053fe9ee1b185a
     const tokenData = await response.json();
 
     if (tokenData.error) {
@@ -100,7 +108,7 @@ export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
 
     const accessToken = tokenData.access_token;
 
-    const userResponse = await fetch(`"https://api.spotify.com/v1/me`, {
+    const userResponse = await fetch(`https://api.spotify.com/v1/me`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

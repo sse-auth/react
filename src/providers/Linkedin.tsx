@@ -57,7 +57,7 @@ export interface LinkedInProps extends SSEProps {
  */
 export async function useLinkedIn(
   props: LinkedInProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

@@ -50,7 +50,7 @@ export interface KeycloakProps extends SSEProps {
  */
 export async function useKeyclock(
   props: KeycloakProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

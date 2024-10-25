@@ -77,7 +77,7 @@ export interface PaypalProps extends SSEProps {
  */
 export async function usePaypal(
   props: PaypalProps
-): Promise<ResponseProps<UserProps>> {
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

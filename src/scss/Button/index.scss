@@ -1,2 +1,2 @@
-@import "Button-layout";
-@import "Button-theme";
+@forward "./Button-layout.scss";
+@forward "./Button-theme.scss";
