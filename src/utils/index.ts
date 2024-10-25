@@ -2,7 +2,7 @@ export * from "./popup";
 export * from "./isComponentType";
 export * from "./clsx";
 export * from "./toQuery";
-export * from "./parse";
+export * from "./ufo";
 export * from "./cva";
 export * from "./cn";
 export * as base64 from "./base64-js";

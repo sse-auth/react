@@ -1,7 +1,12 @@
 // import { IconProps } from "../../components";
 import React from "react";
 import { PopupWindow, toQuery } from "../utils";
-import { IconButtonProps, LoginButtonProps, ResponseProps } from "../types";
+import {
+  IconButtonProps,
+  LoginButtonProps,
+  ResponseProps,
+  UserProps,
+} from "../types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { FaceBookIcon } from "../assets/Icons";

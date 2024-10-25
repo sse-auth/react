@@ -79,6 +79,7 @@ export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
       },
       body: body,
     });
+
     const tokenData = await response.json();
 
     if (tokenData.error) {
@@ -90,7 +91,7 @@ export async function useSpotify(props: SpotifyProps): Promise<ResponseProps> {
 
     const accessToken = tokenData.access_token;
 
-    const userResponse = await fetch(`"https://api.spotify.com/v1/me`, {
+    const userResponse = await fetch(`https://api.spotify.com/v1/me`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },

@@ -17,7 +17,9 @@ import {
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function usePaypal(props: PaypalProps): Promise<ResponseProps> {
+export async function usePaypal(
+  props: PaypalProps
+): Promise<ResponseProps> {
   const {
     clientId,
     clientSecret,

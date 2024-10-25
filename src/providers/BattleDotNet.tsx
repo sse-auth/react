@@ -1,14 +1,23 @@
 import React from "react";
-import {
-  BattledotnetProps,
-  IconButtonProps,
-  LoginButtonProps,
-  ResponseProps,
-} from "../types";
+import { BattledotnetProps, ResponseProps } from "../types";
 import { PopupWindow } from "../utils";
 import { randomUUID } from "crypto";
 import { TextButton, IconButton } from "../components";
 import { BattleDotNetIcon } from "../assets/Icons";
+
+export interface BattleDotNetLoginButtonProps extends BattledotnetProps {
+  onSuccess: (accessToken: string, userData: any) => void;
+  onFailure: (error: Error) => void;
+}
+
+export type BattleDotNetIconButtonProps = BattledotnetProps & {
+  onSuccess: (accessToken: string, userData: any) => void;
+  onFailure: (error: Error) => void;
+  //   icon: IconProps["icon"];
+  icon?: React.ReactNode | string;
+  variant?: string;
+  className?: string;
+};
 
 /**
  * Initiates the GitHub login process using OAuth.
@@ -113,9 +122,11 @@ export async function useBattleDotNet(
   }
 }
 
-export const BattleDotNetLogin: React.FC<
-  LoginButtonProps<BattledotnetProps>
-> = ({ onSuccess, onFailure, ...props }) => {
+export const BattleDotNetLogin: React.FC<BattleDotNetLoginButtonProps> = ({
+  onSuccess,
+  onFailure,
+  ...props
+}) => {
   const [loading, setLoading] = React.useState(false);
 
   const handleLogin = async () => {
@@ -141,9 +152,7 @@ export const BattleDotNetLogin: React.FC<
   );
 };
 
-export const BattleDotNetIconButton: React.FC<
-  IconButtonProps<BattledotnetProps>
-> = ({
+export const BattleDotNetIconButton: React.FC<BattleDotNetIconButtonProps> = ({
   onFailure,
   onSuccess,
   icon = BattleDotNetIcon,
