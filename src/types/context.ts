@@ -55,6 +55,32 @@ export type ProviderContextMap = {
   Yandex?: YandexProps;
 };
 
+type Theme = "dark" | "light";
+
+type FontOptions =
+  | "Open Sans"
+  | "ui-sans-serif"
+  | "system-ui"
+  | "-apple-system"
+  | "Segoe UI"
+  | "Roboto"
+  | "Helvetica Neue"
+  | "Arial"
+  | "Noto Sans"
+  | "sans-serif"
+  | "Apple Color Emoji"
+  | "Segoe UI Emoji"
+  | "Segoe UI Symbol"
+  | "Noto Color Emoji";
+
+export interface PageOptions {
+  theme?: Theme;
+  font?: FontOptions;
+  site?: {
+    name?: string;
+  };
+}
+
 export type AuthContextType = {
   isAuthenticated: boolean;
   signIn: (
@@ -63,9 +89,10 @@ export type AuthContextType = {
   ) => void;
   signOut: () => void;
   error: Error | string | null | unknown;
-  // providers: ProviderContextMap;
+  providers: ProviderContextMap | null;
   data: {
     user: UserProps | null;
     accessToken: string | null;
   };
+  options?: PageOptions;
 };

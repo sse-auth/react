@@ -1,7 +1,7 @@
 import React from "react";
 import { BattledotnetProps, ResponseProps } from "../types";
 import { PopupWindow } from "../utils";
-import { randomUUID } from "crypto";
+// import { randomUUID } from "crypto";
 import { TextButton, IconButton } from "../components";
 import { BattleDotNetIcon } from "../assets/Icons";
 
@@ -51,7 +51,7 @@ export async function useBattleDotNet(
     client_id: clientId,
     redirect_uri: redirectUri,
     scope: finalScope.join(" "),
-    state: randomUUID(), // Todo: handle PKCE flow
+    // state: randomUUID(), // Todo: handle PKCE flow
     response_type: "code",
     ...authorizationParams,
   });

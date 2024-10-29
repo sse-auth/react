@@ -34,29 +34,33 @@
     "clean": "rimraf dist",
     "build:css": "sass --embed-sources ./src/style.scss ./dist/css/styles.css",
     "build": "rimraf dist && npm run build:css && cross-env NODE_ENV=production rollup -c",
-    "sse": "rimraf dist && npm run build:css && cross-env NODE_ENV=production rollup -c",
-    "tsc": "rimraf dist && tsc"
+    "tsc": "rimraf dist && tsc",
+    "css": "npx tailwindcss -o ./dist/style.css"
   },
   "author": "SSE World",
   "license": "MIT",
   "description": "A Library for Oauth Designed By SSE",
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-typescript": "^12.1.0",
+    "@rollup/plugin-typescript": "^12.1.1",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.7.7",
     "@types/react": "^18.3.7",
+    "@types/react-dom": "^18.3.1",
     "cross-env": "^7.0.3",
     "rimraf": "^6.0.1",
     "rollup": "^4.24.0",
     "sass": "^1.80.3",
+    "sse-tail-css": "^1.0.2",
     "typescript": "^5.6.3"
   },
   "dependencies": {
     "@rollup/plugin-terser": "^0.4.4",
+    "@tailus/themer": "^0.1.8",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.454.0",
     "react": "^18.3.1",
     "tailwind-merge": "^2.5.4"
   },

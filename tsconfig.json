@@ -15,7 +15,7 @@
     "strictNullChecks": true,
     // "sourceMap": true,
     // "inlineSources": true,
-    "jsx": "react-jsxdev"
+    "jsx": "react-jsxdev",
   },
   "include": ["./src", "index.ts"],
   "exclude": ["./src/providers/Facebook"]
