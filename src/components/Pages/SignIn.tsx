@@ -4,6 +4,10 @@ import Button from "../tailus-ui/Button";
 import Label from "../tailus-ui/Label";
 import Separator from "../tailus-ui/Separator";
 import { Text, Link, Caption, Title } from "../tailus-ui/typography";
+import { GithubIcon, GoogleIcon } from "../../assets/Icons";
+import { ProviderContextMap } from "../../types";
+import { useEffect } from "react";
+import "../../../dist/style.css";
 
 // type SignInTheme = "dark" | "light" | "system";
 
@@ -180,7 +184,62 @@ import { Text, Link, Caption, Title } from "../tailus-ui/typography";
 // };
 
 export const SignIn = () => {
-  const { signIn, providers, options } = useAuth()
+  const { signIn, providers, options } = useAuth();
+
+  useEffect(() => {
+    document.documentElement.setAttribute("class", options?.theme ?? "dark");
+    document.documentElement.setAttribute("lang", "en");
+    document.documentElement.setAttribute("data-palette", "tls");
+    document.documentElement.setAttribute("data-shade", "900");
+    document.documentElement.setAttribute("data-rounded", "2xlarge");
+
+    const rootElement = document.getElementById("root");
+    if (rootElement) {
+      rootElement.classList.add(
+        "antialiased",
+        "bg-gray-50",
+        "dark:[--body-text-color:theme(colors.gray.300)]",
+        "dark:bg-gray-950",
+        "font-sans"
+      );
+    }
+    // document.body.classList.add(
+    //   "antialiased",
+    //   "bg-gray-50",
+    //   "dark:[--body-text-color:theme(colors.gray.300)]",
+    //   "dark:bg-gray-950",
+    //   "font-sans"
+    // );
+  }, []);
+
+  const renderProviderButtons = () => {
+    if (!providers) {
+      return null; // Return null if providers is not available
+    }
+
+    return Object.keys(providers).map((providerKey) => {
+      const provider = providers[providerKey as keyof typeof providers];
+
+      if (provider) {
+        return (
+          <Button.Root
+            key={providerKey}
+            variant="outlined"
+            intent="gray"
+            size="sm"
+            className="w-full mt-2 mb-2"
+            onClick={() => signIn(providerKey as keyof ProviderContextMap)}
+          >
+            <Button.Icon type="leading" size="xs">
+              <div dangerouslySetInnerHTML={{ __html: GithubIcon }} />
+            </Button.Icon>
+            <Button.Label>{providerKey}</Button.Label>
+          </Button.Root>
+        );
+      }
+    });
+  };
+
   return (
     <main className="inset-0 z-10 m-auto h-fit max-w-md px-6 py-12 lg:absolute">
       <Card
@@ -196,6 +255,7 @@ export const SignIn = () => {
               Welcome back! Sign in to continue
             </Text>
           </div>
+          <div className="mt-6">{renderProviderButtons()}</div>
         </div>
       </Card>
     </main>

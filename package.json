@@ -30,12 +30,15 @@
     "LICENSE",
     "index.ts"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rimraf dist",
     "build:css": "sass --embed-sources ./src/style.scss ./dist/css/styles.css",
     "build": "rimraf dist && npm run build:css && cross-env NODE_ENV=production rollup -c",
     "tsc": "rimraf dist && tsc",
-    "css": "npx tailwindcss -o ./dist/style.css"
+    "css": "npx tailwindcss -o ./dist/css/style.css"
   },
   "author": "SSE World",
   "license": "MIT",
@@ -51,7 +54,6 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.24.0",
     "sass": "^1.80.3",
-    "sse-tail-css": "^1.0.2",
     "typescript": "^5.6.3"
   },
   "dependencies": {
@@ -60,6 +62,7 @@
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "jsonwebtoken": "^9.0.2",
+    "jws": "^4.0.0",
     "lucide-react": "^0.454.0",
     "react": "^18.3.1",
     "tailwind-merge": "^2.5.4"

@@ -45,6 +45,7 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const Component = href ? "a" : "div";
+  // @ts-ignore
   const { outer } = gradientCard({ variant });
 
   if (fancy && gradient) {

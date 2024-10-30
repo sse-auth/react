@@ -21,6 +21,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         ref={forwardedRef}
+        // @ts-ignore
         className={input({ variant, fancy, size, className })}
         {...props}
       />
