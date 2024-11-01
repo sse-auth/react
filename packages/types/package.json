@@ -1,0 +1,39 @@
+{
+  "name": "@sse-auth/types",
+  "version": "1.0.0",
+  "description": "Types for SSE Authentication",
+  "files": [
+    "dist",
+    "tsconfig.json"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts"
+    },
+    "./context": {
+      "types": "./dist/context/index.d.ts"
+    },
+    "./context/*": {
+      "types": "./dist/context/*.d.ts"
+    },
+    "./providers": {
+      "types": "./dist/providers/index.d.ts"
+    },
+    "./providers/*": {
+      "types": "./dist/providers/*.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sse-auth/react.git"
+  },
+  "author": "SSE World",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sse-auth/react/issues"
+  },
+  "homepage": "https://github.com/sse-auth/react#readme"
+}

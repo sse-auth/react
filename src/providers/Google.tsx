@@ -9,47 +9,6 @@ import {
   GoogleProps,
 } from "../types";
 
-type ErrorCode =
-  | "invalid_request"
-  | "access_denied"
-  | "unauthorized_client"
-  | "unsupported_response_type"
-  | "invalid_scope"
-  | "server_error"
-  | "temporarily_unavailable";
-
-interface TokenResponse {
-  access_token?: string;
-  expires_in?: number;
-  hd?: string;
-  prompt?: string;
-  token_type: string;
-  scope?: string;
-  state?: string;
-  error?: ErrorCode;
-  error_description?: string;
-  error_uri?: string;
-}
-
-export interface GoogleProfile extends Record<string, any> {
-  aud?: string;
-  azp?: string;
-  email?: string;
-  email_verified?: boolean;
-  exp?: number;
-  family_name?: string;
-  given_name?: string;
-  hd?: string;
-  iat?: number;
-  iss?: string;
-  jti?: string;
-  locale?: string;
-  name?: string;
-  nbf?: number;
-  picture?: string;
-  sub?: string;
-}
-
 /**
  * Initiates the Auth0 login process using OAuth.
  *

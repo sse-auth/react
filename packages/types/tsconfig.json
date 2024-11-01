@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist", // Ensure this is the output directory
+    "rootDir": "./src", // Ensure this is the root directory of your source files
+    "baseUrl": "./"
+  },
+  "exclude": [
+    "node_modules",
+    "dist" // Exclude the output directory to avoid conflicts
+  ]
+}

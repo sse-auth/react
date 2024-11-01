@@ -16,7 +16,8 @@ import {
   XProps,
   XSUAAProps,
   YandexProps,
-} from "./providers";
+} from "../providers";
+import { PageOptions } from "./font";
 
 export type AuthProviderContext =
   | { name: "Auth0"; options: Auth0Props }
@@ -54,32 +55,6 @@ export type ProviderContextMap = {
   Xsuaa?: XSUAAProps;
   Yandex?: YandexProps;
 };
-
-type Theme = "dark" | "light";
-
-type FontOptions =
-  | "Open Sans"
-  | "ui-sans-serif"
-  | "system-ui"
-  | "-apple-system"
-  | "Segoe UI"
-  | "Roboto"
-  | "Helvetica Neue"
-  | "Arial"
-  | "Noto Sans"
-  | "sans-serif"
-  | "Apple Color Emoji"
-  | "Segoe UI Emoji"
-  | "Segoe UI Symbol"
-  | "Noto Color Emoji";
-
-export interface PageOptions {
-  theme?: Theme;
-  font?: FontOptions;
-  site?: {
-    name?: string;
-  };
-}
 
 export type AuthContextType = {
   isAuthenticated: boolean;

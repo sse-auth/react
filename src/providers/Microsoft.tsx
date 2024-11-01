@@ -9,14 +9,6 @@ import {
   ResponseProps,
 } from "../types";
 
-export interface MicrosoftEntraIDProfile extends Record<string, any> {
-  sub: string;
-  nickname: string;
-  email: string;
-  picture: string;
-  [key: string]: any;
-}
-
 /**
  * Initiates the Auth0 login process using OAuth.
  *

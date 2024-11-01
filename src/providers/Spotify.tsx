@@ -14,18 +14,6 @@ import {
   SpotifyProps,
 } from "../types";
 
-interface SpotifyImage {
-  url: string;
-}
-
-export interface SpotifyProfile extends Record<string, any> {
-  id: string;
-  display_name: string;
-  email: string;
-  images: SpotifyImage[];
-  [key: string]: any;
-}
-
 /**
  * Initiates the Auth0 login process using OAuth.
  *
