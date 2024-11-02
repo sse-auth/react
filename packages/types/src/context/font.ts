@@ -17,6 +17,7 @@ type FontOptions =
   | "Noto Color Emoji";
 
 export interface PageOptions {
+  secret?: string;
   theme?: Theme;
   font?: FontOptions;
   site?: {

@@ -1,31 +1,4 @@
-import { SerializeOptions } from "./lib/cookie";
-
-export type WarningCode =
-  | "debug-enabled"
-  | "csrf-disabled"
-  | "experimental-webauthn"
-  | "env-url-basepath-redundant"
-  | "env-url-basepath-mismatch";
-
-export interface LoggerInstance extends Record<string, Function> {
-  warn: (code: WarningCode) => void;
-  error: (error: Error) => void;
-  debug: (message: string, metadata?: unknown) => void;
-}
-
-export type Awaitable<T> = T | PromiseLike<T>;
-export type Awaited<T> = T extends Promise<infer U> ? U : T;
-
-export type AuthAction =
-  | "callback"
-  | "csrf"
-  | "error"
-  | "providers"
-  | "session"
-  | "signin"
-  | "signout"
-  | "verify-request"
-  | "webauthn-options";
+import { Awaitable, LoggerInstance } from "./index";
 
 export interface DefaultJWT extends Record<string, unknown> {
   name?: string | null;
@@ -115,32 +88,4 @@ export interface GetTokenParams<R extends boolean = false>
   raw?: R;
   decode?: JWTOptions["decode"];
   logger?: LoggerInstance | Console;
-}
-
-export interface CookieOption {
-  name: string;
-  options: SerializeOptions;
-}
-
-/** [Documentation](https://authjs.dev/reference/core#cookies) */
-export interface CookiesOptions {
-  sessionToken: Partial<CookieOption>;
-  callbackUrl: Partial<CookieOption>;
-  csrfToken: Partial<CookieOption>;
-  pkceCodeVerifier: Partial<CookieOption>;
-  state: Partial<CookieOption>;
-  nonce: Partial<CookieOption>;
-  webauthnChallenge: Partial<CookieOption>;
-}
-
-export interface RequestInternal {
-  url: URL;
-  method: "GET" | "POST";
-  cookies?: Partial<Record<string, string>>;
-  headers?: Record<string, any>;
-  query?: Record<string, any>;
-  body?: Record<string, any>;
-  action: AuthAction;
-  providerId?: string;
-  error?: string;
 }

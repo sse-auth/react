@@ -3,7 +3,7 @@ import type {
   CookiesOptions,
   RequestInternal,
   LoggerInstance,
-} from "./types";
+} from "@sse-auth/types/dist/utils";
 
 const ALLOWED_COOKIE_SIZE = 4096;
 // Based on commented out section above

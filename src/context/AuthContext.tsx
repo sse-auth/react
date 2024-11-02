@@ -1,5 +1,18 @@
 import React from "react";
-import { AuthContextType, ProviderContextMap, UserProps, PageOptions } from "@sse-auth/types";
+import {
+  AuthContextType,
+  ProviderContextMap,
+  UserProps,
+  PageOptions,
+} from "@sse-auth/types";
+import {
+  encode,
+  decode,
+  getToken,
+  defaultCookies,
+  SessionStore,
+} from "@sse-auth/utils";
+import { parse } from "@sse-auth/utils/dist/lib/cookie";
 import { providerFunction } from "./function";
 
 // Create a context for authentication
@@ -22,11 +35,17 @@ export const AuthContext = React.createContext<AuthContextType>({
   },
 });
 
-export const SSEAuthProvider: React.FC<{
+interface SSEAuthInt {
   providers: ProviderContextMap;
   children: React.ReactNode;
   options?: PageOptions;
-}> = ({ providers, children, options }) => {
+}
+
+export const SSEAuthProvider: React.FC<SSEAuthInt> = ({
+  providers,
+  children,
+  options,
+}) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error | string | null | unknown>(
     null
@@ -37,6 +56,8 @@ export const SSEAuthProvider: React.FC<{
     const savedTheme = localStorage.getItem("theme");
     return savedTheme ? savedTheme : "system";
   });
+
+  const secureCookies = window.location.protocol === "https:";
 
   React.useEffect(() => {
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
@@ -59,6 +80,36 @@ export const SSEAuthProvider: React.FC<{
     localStorage.setItem("theme", theme);
   }, [theme]);
 
+  const cookieName = defaultCookies(secureCookies).sessionToken.name;
+  const salt = `sse-auth.react.session-token`;
+
+  React.useEffect(() => {
+    const initAuth = async () => {
+      const token = await getToken({
+        req: {
+          headers: {
+            getSetCookie: document.cookie
+          }
+        },
+        secureCookie: secureCookies,
+        secret: options?.secret ?? "sse-auth",
+        salt
+      });
+      if (token) {
+        const decodedData = await decode({
+          token,
+          secret: options?.secret ?? "sse-auth",
+          salt,
+        });
+        if (decodedData) {
+          setUserData(decodedData);
+          setAccessToken(null);
+          setIsAuthenticated(true);
+        }
+      }
+    };
+  }, []);
+
   const signIn = async (providerName: keyof ProviderContextMap) => {
     try {
       const provider = providers[providerName];
@@ -69,9 +120,31 @@ export const SSEAuthProvider: React.FC<{
       const loginFunction = providerFunction[providerName];
 
       const response = await loginFunction(provider as any);
+      // Assuming response contains user data and access token
       setUserData(response.userData);
       setAccessToken(response.accessToken);
       setIsAuthenticated(true);
+
+      // Encode the JWT and set it as a cookie
+      const cookieOptions = defaultCookies(secureCookies).sessionToken.options;
+      const jwt = await encode({
+        token: response.userData,
+        secret: options?.secret || "sse-auth",
+        salt,
+      });
+      const cookieChunks = new SessionStore(
+        defaultCookies(secureCookies).sessionToken,
+        parse(document.cookie),
+        console
+      ).chunk(jwt, cookieOptions);
+
+      cookieChunks.forEach((cookie) => {
+        document.cookie = `${cookie.name}=${cookie.value}; path=${
+          cookie.options.path
+        }; max-age=${cookie.options.maxAge}; ${
+          cookie.options.secure ? "Secure;" : ""
+        } HttpOnly; SameSite=${cookie.options.sameSite}`;
+      });
     } catch (err) {
       setError(err);
       console.error("Authentication error:", err);
@@ -83,6 +156,22 @@ export const SSEAuthProvider: React.FC<{
     setIsAuthenticated(false);
     setUserData(null);
     setAccessToken(null);
+
+    // Clear the session cookies
+    const cookieOptions = defaultCookies(secureCookies).sessionToken.options;
+    const cleanedCookies = new SessionStore(
+      defaultCookies(secureCookies).sessionToken,
+      parse(document.cookie),
+      console
+    ).clean();
+
+    cleanedCookies.forEach((cookie) => {
+      document.cookie = `${cookie.name}=; path=${
+        cookie.options.path
+      }; max-age=0; ${
+        cookie.options.secure ? "Secure;" : ""
+      } HttpOnly; SameSite=${cookie.options.sameSite}`;
+    });
   };
 
   return (
@@ -94,7 +183,7 @@ export const SSEAuthProvider: React.FC<{
         signOut,
         providers,
         data: { user: userData, accessToken },
-        options
+        options,
       }}
     >
       {children}

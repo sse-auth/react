@@ -5,7 +5,11 @@ import {
   calculateJwkThumbprint,
   jwtDecrypt,
 } from "jose";
-import { JWT, JWTEncodeParams, GetTokenParams } from "./types";
+import {
+  JWT,
+  JWTEncodeParams,
+  GetTokenParams,
+} from "@sse-auth/types/dist/utils";
 import { defaultCookies, SessionStore } from "./cookie";
 import { parse } from "./lib/cookie";
 
