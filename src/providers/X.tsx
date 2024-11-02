@@ -6,7 +6,13 @@ import {
   parsePath,
   PopupWindow,
 } from "../utils";
-import { IconButtonProps, LoginButtonProps, ResponseProps } from "../types";
+import {
+  IconButtonProps,
+  LoginButtonProps,
+  ResponseProps,
+  XProfile,
+  XProps
+} from "@sse-auth/types";
 import { XIcon } from "../assets/Icons";
 
 export async function useX(props: XProps): Promise<ResponseProps<XProfile>> {

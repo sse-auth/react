@@ -18,7 +18,7 @@
       "import": "./dist/src/providers/*.js",
       "types": "./dist/src/providers/*.d.ts"
     },
-    "./types/*": "./dist/src/types/*",
+    "./types/*": "./dist/src/types",
     "./package.json": "./package.json",
     "./*": "./*"
   },
@@ -38,7 +38,7 @@
     "build:css": "sass --embed-sources ./src/style.scss ./dist/css/styles.css",
     "build": "rimraf dist && npm run build:css && cross-env NODE_ENV=production rollup -c",
     "tsc": "rimraf dist && tsc",
-    "css": "npx tailwindcss -o ./dist/css/style.css"
+    "css": "npx tailwindcss -i ./src/style.css -o ./dist/css/style.css"
   },
   "author": "SSE World",
   "license": "MIT",
@@ -46,27 +46,33 @@
   "devDependencies": {
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-typescript": "^12.1.1",
-    "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.8.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
     "cross-env": "^7.0.3",
+    "jose": "^5.9.6",
+    "postcss": "^8.4.47",
     "rimraf": "^6.0.1",
     "rollup": "^4.24.2",
     "sass": "^1.80.4",
+    "tailwindcss": "^3.4.14",
     "typescript": "^5.6.3"
   },
   "dependencies": {
     "@rollup/plugin-terser": "^0.4.4",
-    "@sse-auth/types": "file:packages/types/sse-auth-types-1.0.0.tgz",
+    "@sse-auth/types": "^1.0.1",
     "@tailus/themer": "^0.1.8",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
-    "jsonwebtoken": "^9.0.2",
     "jws": "^4.0.0",
     "lucide-react": "^0.454.0",
-    "react": "^18.3.1",
+    "react": "^18.0.0",
     "tailwind-merge": "^2.5.4"
+  },
+  "peerDependencies": {
+    "@sse-auth/types": "^1.0.1",
+    "react": "^18.0.0"
   },
   "repository": {
     "type": "git",

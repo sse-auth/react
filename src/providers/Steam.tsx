@@ -6,7 +6,7 @@ import {
   LoginButtonProps,
   ResponseProps,
   SteamProps,
-} from "../types";
+} from "@sse-auth/types";
 import { SteamIcon } from "../assets/Icons";
 
 export async function useSteam(

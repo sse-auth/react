@@ -6,7 +6,7 @@ import {
   LoginButtonProps,
   ResponseProps,
   YandexProps,
-} from "../types";
+} from "@sse-auth/types";
 import { YandexIcon } from "../assets/Icons";
 
 export interface YandexProfile {

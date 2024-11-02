@@ -6,7 +6,8 @@ import {
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
-} from "../types";
+  GitHubProfile,
+} from "@sse-auth/types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { GithubIcon } from "../assets/Icons";
@@ -71,7 +72,7 @@ export async function useGithub(
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        "User-Agent": "sseauth"
+        "User-Agent": "sseauth",
       },
     });
 

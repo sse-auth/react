@@ -7,7 +7,8 @@ import {
   LoginButtonProps,
   IconButtonProps,
   DiscordProps,
-} from "../types";
+  DiscordProfile,
+} from "@sse-auth/types";
 
 
 /**

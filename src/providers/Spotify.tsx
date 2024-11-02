@@ -12,7 +12,8 @@ import {
   LoginButtonProps,
   ResponseProps,
   SpotifyProps,
-} from "../types";
+  SpotifyProfile
+} from "@sse-auth/types";
 
 /**
  * Initiates the Auth0 login process using OAuth.

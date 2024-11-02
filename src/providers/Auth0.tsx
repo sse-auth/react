@@ -1,10 +1,11 @@
 import React from "react";
 import {
+  Auth0Props,
+  Auth0Profile,
   ResponseProps,
   LoginButtonProps,
   IconButtonProps,
-  Auth0Props,
-} from "../types";
+} from "@sse-auth/types";
 import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import { Auth0Icon } from "../assets/Icons";
@@ -39,6 +40,7 @@ export async function useAuth0(
   const authorizationURL = `https://${domain}/authorize`;
   const tokenURL = `https://${domain}/oauth/token`;
   const userUrl = `https://${domain}/userinfo`;
+  const userInfo = `https://${domain}/api/v2/users`
 
   const finalScope =
     emailRequired && !scope.includes("email") ? [...scope, "email"] : scope;
@@ -89,6 +91,7 @@ export async function useAuth0(
 
     const tokenType = tokenData.token_type;
     const accessToken = tokenData.access_token;
+    // console.log(jwt.decode(tokenData.id_token))
 
     const userResponse = await fetch(userUrl, {
       headers: {

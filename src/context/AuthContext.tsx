@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthContextType, ProviderContextMap, UserProps, PageOptions } from "../types";
+import { AuthContextType, ProviderContextMap, UserProps, PageOptions } from "@sse-auth/types";
 import { providerFunction } from "./function";
 
 // Create a context for authentication

@@ -1,0 +1,50 @@
+{
+  "name": "@sse-auth/adapter-mongodb",
+  "version": "1.0.0",
+  "main": "index.js",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "keywords": [
+    "sse-auth",
+    "oauth",
+    "mongodb",
+    "adapter"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sse-auth/react.git"
+  },
+  "author": "SSE World",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sse-auth/react/issues"
+  },
+  "homepage": "https://github.com/sse-auth/react#readme",
+  "description": "",
+  "devDependencies": {
+    "mongodb": "^6.10.0"
+  },
+  "peerDependencies": {
+    "mongodb": "^6"
+  },
+  "dependencies": {
+    "@sse-auth/adapter-core": "^1.0.0"
+  }
+}

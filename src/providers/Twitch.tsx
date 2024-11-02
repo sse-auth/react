@@ -7,7 +7,8 @@ import {
   LoginButtonProps,
   ResponseProps,
   TwitchProps,
-} from "../types";
+  TwitchProfile
+} from "@sse-auth/types";
 
 export async function useTwitch(
   props: TwitchProps

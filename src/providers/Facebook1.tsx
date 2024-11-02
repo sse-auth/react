@@ -5,8 +5,8 @@ import {
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
-  UserProps,
-} from "../types";
+} from "@sse-auth/types";
+import { FacebookProps } from "@sse-auth/types/dist/providers/Facebook";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
 import { FaceBookIcon } from "../assets/Icons";

@@ -1,0 +1,51 @@
+{
+  "name": "@sse-auth/utils",
+  "version": "1.0.0",
+  "description": "All the utils for SSE Auth ",
+  "main": "./dist/index.js",
+  "types": "./dist/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./jwt": {
+      "import": "./dist/jwt.js",
+      "require": "./dist/jwt.js",
+      "types": "./dist/jwt.d.ts"
+    },
+    "./cookie": {
+      "import": "./dist/cookie.js",
+      "require": "./dist/cookie.js",
+      "types": "./dist/cookie.d.ts"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "require": "./dist/types.js",
+      "types": "./dist/types.d.ts"
+    },
+    "./*": "./*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sse-auth/react.git",
+    "directory": "packages/utils"
+  },
+  "author": "SSE World",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sse-auth/react/issues"
+  },
+  "homepage": "https://github.com/sse-auth/react#readme",
+  "dependencies": {
+    "jose": "^5.9.6",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@panva/hkdf": "^1.2.1"
+  }
+}

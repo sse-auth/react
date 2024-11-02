@@ -2,12 +2,12 @@ import { useAuth } from "../../context/AuthContext";
 import Card from "../tailus-ui/Card";
 import Button from "../tailus-ui/Button";
 import Label from "../tailus-ui/Label";
+import Input from "../tailus-ui/Input";
 import Separator from "../tailus-ui/Separator";
 import { Text, Link, Caption, Title } from "../tailus-ui/typography";
 import { GithubIcon, GoogleIcon } from "../../assets/Icons";
 import { ProviderContextMap } from "../../types";
 import { useEffect } from "react";
-import "../../../dist/style.css";
 
 // type SignInTheme = "dark" | "light" | "system";
 
@@ -183,7 +183,12 @@ import "../../../dist/style.css";
 //   );
 // };
 
-export const SignIn = () => {
+interface SSETry {
+  username?: boolean;
+  registerUrl?: string;
+}
+
+export const SignIn = ({ username = false, registerUrl }: SSETry) => {
   const { signIn, providers, options } = useAuth();
 
   useEffect(() => {
@@ -227,7 +232,7 @@ export const SignIn = () => {
             variant="outlined"
             intent="gray"
             size="sm"
-            className="w-full mt-2 mb-2"
+            className={`w-full ${username && "mt-2 mb-2"}`}
             onClick={() => signIn(providerKey as keyof ProviderContextMap)}
           >
             <Button.Icon type="leading" size="xs">
@@ -255,8 +260,79 @@ export const SignIn = () => {
               Welcome back! Sign in to continue
             </Text>
           </div>
-          <div className="mt-6">{renderProviderButtons()}</div>
+          <div className={`mt-6 ${username ? "grid grid-cols-2 gap-3" : null}`}>
+            {renderProviderButtons()}
+          </div>
+
+          {username && (
+            <form className="mx-auto mt-8 space-y-6">
+              <div className="space-y-6 rounded-[--btn-radius] shadow-sm shadow-gray-500/5">
+                <div className="relative my-6 grid items-center gap-3 [grid-template-columns:1fr_auto_1fr]">
+                  <Separator className="h-px border-b" />
+                  <Caption as="span" className="block" size="sm">
+                    Or continue with
+                  </Caption>
+                  <Separator className="h-px border-b" />
+                </div>
+
+                <div className="space-y-6">
+                  <div className="space-y-2.5">
+                    <Label size="sm" htmlFor="email">
+                      Your email
+                    </Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      variant="outlined"
+                      size="md"
+                    />
+                  </div>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <Label size="sm" htmlFor="password">
+                        Your Password
+                      </Label>
+                      <Link href="#" size="sm">
+                        Forgot your Password ?
+                      </Link>
+                    </div>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      required
+                      variant="outlined"
+                      size="md"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <Button.Root className="w-full">
+                <Button.Label>Sign In</Button.Label>
+              </Button.Root>
+            </form>
+          )}
         </div>
+      </Card>
+      <Card
+        variant="soft"
+        data-shade="925"
+        className="rounded-[calc(var(--card-radius)-0.25rem)] dark:bg-gray-925"
+      >
+        <Caption className="my-0" size="sm" align="center">
+          Don't have an account ?{" "}
+          <Link
+            intent="neutral"
+            size="sm"
+            variant="underlined"
+            href={registerUrl ?? "/register"}
+          >
+            Create account
+          </Link>
+        </Caption>
       </Card>
     </main>
   );

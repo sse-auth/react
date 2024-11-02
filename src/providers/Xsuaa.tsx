@@ -6,7 +6,7 @@ import {
   LoginButtonProps,
   ResponseProps,
   XSUAAProps,
-} from "../types";
+} from "@sse-auth/types";
 import { XsuaaIcon } from "../assets/Icons";
 
 export async function useXsuaa(props: XSUAAProps): Promise<ResponseProps> {

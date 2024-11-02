@@ -1,5 +1,5 @@
 import React from "react";
-import { BattledotnetProps, ResponseProps } from "../types";
+import { BattledotnetProps, ResponseProps } from "@sse-auth/types";
 import { PopupWindow } from "../utils";
 // import { randomUUID } from "crypto";
 import { TextButton, IconButton } from "../components";

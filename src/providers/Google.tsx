@@ -7,7 +7,8 @@ import {
   LoginButtonProps,
   IconButtonProps,
   GoogleProps,
-} from "../types";
+  GoogleProfile
+} from "@sse-auth/types";
 
 /**
  * Initiates the Auth0 login process using OAuth.

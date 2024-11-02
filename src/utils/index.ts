@@ -9,3 +9,4 @@ export * as base64 from "./base64-js";
 export * as ieee754 from "./ieee754";
 export * from "./random"
 export * from "./encode"
+export * from "./jwt-decode"

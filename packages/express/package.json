@@ -1,0 +1,25 @@
+{
+  "name": "@sse-auth/express",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sse-auth/react.git",
+    "directory": "packages/express"
+  },
+  "author": "SSE World",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sse-auth/react/issues"
+  },
+  "homepage": "https://github.com/sse-auth/react#readme",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "express": "^4.21.1",
+    "typescript": "^5.6.3"
+  }
+}

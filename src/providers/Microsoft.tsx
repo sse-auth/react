@@ -7,7 +7,8 @@ import {
   LoginButtonProps,
   MicrosoftProps,
   ResponseProps,
-} from "../types";
+  MicrosoftEntraIDProfile
+} from "@sse-auth/types";
 
 /**
  * Initiates the Auth0 login process using OAuth.

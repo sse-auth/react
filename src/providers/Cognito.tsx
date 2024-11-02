@@ -4,7 +4,7 @@ import {
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
-} from "../types";
+} from "@sse-auth/types";
 import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import { CognitoIcon } from "../assets/Icons";

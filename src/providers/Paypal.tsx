@@ -8,7 +8,7 @@ import {
   LoginButtonProps,
   PaypalProps,
   ResponseProps,
-} from "../types";
+} from "@sse-auth/types";
 
 /**
  * Initiates the Auth0 login process using OAuth.
