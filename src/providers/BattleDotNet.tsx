@@ -1,5 +1,6 @@
 import React from "react";
 import { BattledotnetProps, ResponseProps } from "@sse-auth/types";
+import { BattleNetProfile } from "@sse-auth/types/providers/BattleDotNet";
 import { PopupWindow } from "../utils";
 // import { randomUUID } from "crypto";
 import { TextButton, IconButton } from "../components";
@@ -114,9 +115,19 @@ export async function useBattleDotNet(
       },
     });
 
-    const userData = await userResponse.json();
+    const userData: BattleNetProfile = await userResponse.json();
 
-    return { error: null, accessToken, userData };
+    return {
+      error: null,
+      accessToken,
+      userData,
+      profile: {
+        id: userData.sub,
+        name: userData.battle_tag,
+        email: null,
+        image: null,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }

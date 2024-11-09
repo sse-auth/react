@@ -1,47 +1,14 @@
 {
   "name": "@sse-auth/types",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "description": "Types for SSE Authentication",
-  "main": "./dist/index.d.ts",
-  "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "src",
-    "tsconfig.json"
-  ],
-  "exports": {
-    ".": {
-      "import": "./dist/index.d.ts",
-      "types": "./dist/index.d.ts"
-    },
-    "./*": "./*",
-    "./context": {
-      "import": "./dist/context/index.d.ts",
-      "types": "./dist/context/index.d.ts"
-    },
-    "./context/*": {
-      "import": "./dist/context/*.d.ts",
-      "types": "./dist/context/*.d.ts"
-    },
-    "./providers": {
-      "import": "./dist/providers/index.d.ts",
-      "types": "./dist/providers/index.d.ts"
-    },
-    "./providers/*": {
-      "import": "./dist/providers/*.d.ts",
-      "types": "./dist/providers/*.d.ts"
-    },
-    "./utils": {
-      "import": "./dist/utils/index.d.ts",
-      "types": "./dist/utils/index.d.ts"
-    },
-    "./utils/*": {
-      "import": "./dist/utils/*.d.ts",
-      "types": "./dist/utils/*.d.ts"
-    }
+  "main": "./index.d.ts",
+  "types": "./index.d.ts",
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "npx tsc"
   },
   "repository": {
     "type": "git",

@@ -5,13 +5,14 @@ import {
   UserProps,
   PageOptions,
 } from "@sse-auth/types";
-import {
-  encode,
-  decode,
-  getToken,
-  defaultCookies,
-  SessionStore,
-} from "@sse-auth/utils";
+import { Adapter } from "@sse-auth/types/adapter";
+// import {
+//   encode,
+//   decode,
+//   getToken,
+//   defaultCookies,
+//   SessionStore,
+// } from "@sse-auth/utils";
 import { parse } from "@sse-auth/utils/dist/lib/cookie";
 import { providerFunction } from "./function";
 
@@ -39,12 +40,14 @@ interface SSEAuthInt {
   providers: ProviderContextMap;
   children: React.ReactNode;
   options?: PageOptions;
+  adapter?: Adapter;
 }
 
 export const SSEAuthProvider: React.FC<SSEAuthInt> = ({
   providers,
   children,
   options,
+  adapter,
 }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
   const [error, setError] = React.useState<Error | string | null | unknown>(
@@ -80,35 +83,35 @@ export const SSEAuthProvider: React.FC<SSEAuthInt> = ({
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const cookieName = defaultCookies(secureCookies).sessionToken.name;
-  const salt = `sse-auth.react.session-token`;
+  // const cookieName = defaultCookies(secureCookies).sessionToken.name;
+  // const salt = `sse-auth.react.session-token`;
 
-  React.useEffect(() => {
-    const initAuth = async () => {
-      const token = await getToken({
-        req: {
-          headers: {
-            getSetCookie: document.cookie
-          }
-        },
-        secureCookie: secureCookies,
-        secret: options?.secret ?? "sse-auth",
-        salt
-      });
-      if (token) {
-        const decodedData = await decode({
-          token,
-          secret: options?.secret ?? "sse-auth",
-          salt,
-        });
-        if (decodedData) {
-          setUserData(decodedData);
-          setAccessToken(null);
-          setIsAuthenticated(true);
-        }
-      }
-    };
-  }, []);
+  // React.useEffect(() => {
+  //   const initAuth = async () => {
+  //     const token = await getToken({
+  //       req: {
+  //         headers: {
+  //           getSetCookie: document.cookie
+  //         }
+  //       },
+  //       secureCookie: secureCookies,
+  //       secret: options?.secret ?? "sse-auth",
+  //       salt
+  //     });
+  //     if (token) {
+  //       const decodedData = await decode({
+  //         token,
+  //         secret: options?.secret ?? "sse-auth",
+  //         salt,
+  //       });
+  //       if (decodedData) {
+  //         setUserData(decodedData);
+  //         setAccessToken(null);
+  //         setIsAuthenticated(true);
+  //       }
+  //     }
+  //   };
+  // }, []);
 
   const signIn = async (providerName: keyof ProviderContextMap) => {
     try {
@@ -126,25 +129,25 @@ export const SSEAuthProvider: React.FC<SSEAuthInt> = ({
       setIsAuthenticated(true);
 
       // Encode the JWT and set it as a cookie
-      const cookieOptions = defaultCookies(secureCookies).sessionToken.options;
-      const jwt = await encode({
-        token: response.userData,
-        secret: options?.secret || "sse-auth",
-        salt,
-      });
-      const cookieChunks = new SessionStore(
-        defaultCookies(secureCookies).sessionToken,
-        parse(document.cookie),
-        console
-      ).chunk(jwt, cookieOptions);
+      // const cookieOptions = defaultCookies(secureCookies).sessionToken.options;
+      // const jwt = await encode({
+      //   token: response.userData,
+      //   secret: options?.secret || "sse-auth",
+      //   salt,
+      // });
+      // const cookieChunks = new SessionStore(
+      //   defaultCookies(secureCookies).sessionToken,
+      //   parse(document.cookie),
+      //   console
+      // ).chunk(jwt, cookieOptions);
 
-      cookieChunks.forEach((cookie) => {
-        document.cookie = `${cookie.name}=${cookie.value}; path=${
-          cookie.options.path
-        }; max-age=${cookie.options.maxAge}; ${
-          cookie.options.secure ? "Secure;" : ""
-        } HttpOnly; SameSite=${cookie.options.sameSite}`;
-      });
+      // cookieChunks.forEach((cookie) => {
+      //   document.cookie = `${cookie.name}=${cookie.value}; path=${
+      //     cookie.options.path
+      //   }; max-age=${cookie.options.maxAge}; ${
+      //     cookie.options.secure ? "Secure;" : ""
+      //   } HttpOnly; SameSite=${cookie.options.sameSite}`;
+      // });
     } catch (err) {
       setError(err);
       console.error("Authentication error:", err);
@@ -158,20 +161,20 @@ export const SSEAuthProvider: React.FC<SSEAuthInt> = ({
     setAccessToken(null);
 
     // Clear the session cookies
-    const cookieOptions = defaultCookies(secureCookies).sessionToken.options;
-    const cleanedCookies = new SessionStore(
-      defaultCookies(secureCookies).sessionToken,
-      parse(document.cookie),
-      console
-    ).clean();
+    // const cookieOptions = defaultCookies(secureCookies).sessionToken.options;
+    // const cleanedCookies = new SessionStore(
+    //   defaultCookies(secureCookies).sessionToken,
+    //   parse(document.cookie),
+    //   console
+    // ).clean();
 
-    cleanedCookies.forEach((cookie) => {
-      document.cookie = `${cookie.name}=; path=${
-        cookie.options.path
-      }; max-age=0; ${
-        cookie.options.secure ? "Secure;" : ""
-      } HttpOnly; SameSite=${cookie.options.sameSite}`;
-    });
+    // cleanedCookies.forEach((cookie) => {
+    //   document.cookie = `${cookie.name}=; path=${
+    //     cookie.options.path
+    //   }; max-age=0; ${
+    //     cookie.options.secure ? "Secure;" : ""
+    //   } HttpOnly; SameSite=${cookie.options.sameSite}`;
+    // });
   };
 
   return (

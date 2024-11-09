@@ -6,9 +6,18 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist", // Ensure this is the output directory
-    "rootDir": "./src", // Ensure this is the root directory of your source files
-    "baseUrl": "./"
+    "outDir": "./dist" // Ensure this is the output directory
+    // "outDir": "./dist",
+    // "emitDeclarationOnly": true,
+    // "module": "ES2015",
+    // "target": "ES5",
+    // "lib": ["ES2017", "DOM"],
+    // "jsx": "react",
+    // "moduleResolution": "Node",
+    // "baseUrl": ".",
+    // "declaration": true,
+    // "strict": true,
+    // "noImplicitAny": true
   },
   "exclude": [
     "node_modules",

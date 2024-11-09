@@ -7,29 +7,6 @@
   "scripts": {
     "build": "tsc"
   },
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    },
-    "./jwt": {
-      "import": "./dist/jwt.js",
-      "require": "./dist/jwt.js",
-      "types": "./dist/jwt.d.ts"
-    },
-    "./cookie": {
-      "import": "./dist/cookie.js",
-      "require": "./dist/cookie.js",
-      "types": "./dist/cookie.d.ts"
-    },
-    "./types": {
-      "import": "./dist/types.js",
-      "require": "./dist/types.js",
-      "types": "./dist/types.d.ts"
-    },
-    "./*": "./*"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sse-auth/react.git",

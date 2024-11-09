@@ -2,7 +2,7 @@ import React from "react";
 import { PaypalIcon } from "../assets/Icons";
 import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
-import { btoa } from "buffer";
+import { encodeBase64 } from "../utils"
 import {
   IconButtonProps,
   LoginButtonProps,
@@ -72,7 +72,7 @@ export async function usePaypal(
       throw new Error(params.error);
     }
 
-    const authCode = btoa(`${clientId}:${clientSecret}`);
+    const authCode = encodeBase64(`${clientId}:${clientSecret}`);
 
     const response = await fetch(tokenUrl, {
       method: "POST",

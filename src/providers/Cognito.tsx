@@ -4,11 +4,16 @@ import {
   IconButtonProps,
   LoginButtonProps,
   ResponseProps,
+  CognitoProfile,
 } from "@sse-auth/types";
 import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import { CognitoIcon } from "../assets/Icons";
 
+// Types
+interface Profile extends CognitoProfile {
+  [key: string]: any;
+}
 /**
  * Initiates the Cognito login process using OAuth.
  *
@@ -83,9 +88,19 @@ export async function useCognito(props: CognitoProps): Promise<ResponseProps> {
       },
     });
 
-    const userData = await userResponse.json();
+    const userData: Profile = await userResponse.json();
 
-    return { error: null, accessToken, userData };
+    return {
+      error: null,
+      accessToken,
+      userData,
+      profile: {
+        id: userData.sub,
+        name: userData.name,
+        email: userData.email,
+        image: userData.picture,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -101,11 +116,11 @@ export const CognitoLogin: React.FC<LoginButtonProps<CognitoProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useCognito(props);
+      const { error, accessToken, userData, profile } = await useCognito(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -134,11 +149,11 @@ export const CognitoIconButton: React.FC<IconButtonProps<CognitoProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useCognito(props);
+      const { error, accessToken, userData, profile } = await useCognito(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

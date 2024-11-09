@@ -39,3 +39,8 @@ export type BattledotnetProps = {
   /** */
   redirectUri?: string;
 };
+
+export interface BattleNetProfile extends Record<string, any> {
+  sub: string;
+  battle_tag: string;
+}

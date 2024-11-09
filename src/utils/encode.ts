@@ -30,10 +30,28 @@ function sseBtoa(input: string) {
   return base64;
 }
 
+function encodeToASCII(inputString: string): Uint8Array {
+  // Create a new array to hold the ASCII values
+  const asciiValues: number[] = [];
+
+  for (let i = 0; i < inputString.length; i++) {
+    const charCode = inputString.charCodeAt(i);
+
+    // Check if the character is within the ASCII range
+    if (charCode > 127) {
+      throw new Error("Input string contains non-ASCII characters.");
+    }
+
+    asciiValues.push(charCode);
+  }
+
+  return new Uint8Array(asciiValues);
+}
+
 export const encodeBase64 = (input: string) => {
   if (isNode) {
-    return Buffer.from(input).toString("base64");
+    return Buffer.from(input).toString("ascii");
   } else {
-    return sseBtoa(input)
+    return sseBtoa(input);
   }
 };

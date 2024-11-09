@@ -39,12 +39,10 @@
   "homepage": "https://github.com/sse-auth/react#readme",
   "description": "",
   "devDependencies": {
+    "@sse-auth/adapter-core": "^1.0.0",
     "mongodb": "^6.10.0"
   },
   "peerDependencies": {
     "mongodb": "^6"
-  },
-  "dependencies": {
-    "@sse-auth/adapter-core": "^1.0.0"
   }
 }
