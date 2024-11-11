@@ -1,0 +1,39 @@
+{
+	"folders": [
+		{
+			"name": "sseauth",
+			"path": "."
+		},
+		{
+			"name": "icons",
+			"path": "../icons"
+		},
+		{
+			"name": "core",
+			"path": "adapters/core"
+		},
+		{
+			"name": "firebase",
+			"path": "adapters/firebase"
+		},
+		{
+			"name": "mongodb",
+			"path": "adapters/mongodb"
+		},
+		{
+			"name": "prisma",
+			"path": "adapters/prisma"
+		},
+		{
+			"name": "types",
+			"path": "packages/types"
+		},
+		{
+			"name": "utils",
+			"path": "packages/utils"
+		}
+	],
+	"settings": {
+		"svg.preview.background": "editor"
+	}
+}

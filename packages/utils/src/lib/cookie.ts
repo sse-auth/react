@@ -1,4 +1,4 @@
-import { SerializeOptions } from "@sse-auth/types/dist/utils"
+import { SerializeOptions } from "@sse-auth/types/utils"
 
 /**
  * RegExp to match cookie-name in RFC 6265 sec 4.1.1

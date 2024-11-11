@@ -37,7 +37,7 @@
   "dependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@sse-auth/icons": "^1.1.0",
-    "@sse-auth/types": "^1.2.1",
+    "@sse-auth/types": "^1.2.2",
     "@sse-auth/utils": "^1.0.0",
     "@tailus/themer": "^0.1.8",
     "axios": "^1.7.7",

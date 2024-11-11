@@ -7,6 +7,7 @@ import {
   LoginButtonProps,
   ResponseProps,
   GitHubProfile,
+  TokenSet,
 } from "@sse-auth/types";
 import { TextButton, IconButton } from "../components";
 import axios from "axios";
@@ -84,7 +85,7 @@ export async function useGithub(
       );
     }
 
-    const tokenIn = toQuery(tokenData);
+    const tokenIn: TokenSet = toQuery(tokenData);
     const accessToken = tokenIn.access_token;
     // const accessToken = tokenData.access_token
 
@@ -95,9 +96,19 @@ export async function useGithub(
       },
     });
 
-    const userData = await userResponse.json();
+    const userData: GitHubProfile = await userResponse.json();
 
-    return { error: null, accessToken, userData };
+    return {
+      error: null,
+      accessToken: tokenIn,
+      userData,
+      profile: {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        image: userData.avatar_url,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -113,11 +124,11 @@ export const GithubLoginButton: React.FC<LoginButtonProps<GithubProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGithub(props);
+      const { error, accessToken, userData, profile } = await useGithub(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -146,11 +157,11 @@ export const GithubIconButton: React.FC<IconButtonProps<GithubProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGithub(props);
+      const { error, accessToken, userData, profile } = await useGithub(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

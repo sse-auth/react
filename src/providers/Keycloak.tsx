@@ -4,9 +4,11 @@ import { PopupWindow, parsePath } from "../utils";
 import { TextButton, IconButton } from "../components";
 import {
   IconButtonProps,
+  KeycloakProfile,
   KeycloakProps,
   LoginButtonProps,
   ResponseProps,
+  TokenSet,
 } from "@sse-auth/types";
 
 /**
@@ -78,13 +80,10 @@ export async function useKeyclock(
       }),
     });
 
-    const tokenData = await response.json();
+    const tokenData: TokenSet = await response.json();
 
     if (tokenData.error) {
-      throw new Error(
-        tokenData.error?.data?.error_description ||
-          "Error retrieving access token"
-      );
+      throw new Error("Error retrieving access token");
     }
 
     const accessToken = tokenData.access_token;
@@ -96,8 +95,18 @@ export async function useKeyclock(
       },
     });
 
-    const userData = await userResponse.json();
-    return { error: null, accessToken, userData };
+    const userData: KeycloakProfile = await userResponse.json();
+    return {
+      error: null,
+      accessToken: tokenData,
+      userData,
+      profile: {
+        id: userData.sub,
+        name: userData.name,
+        email: userData.email,
+        image: userData.picture,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -113,11 +122,13 @@ export const KeycloakLogin: React.FC<LoginButtonProps<KeycloakProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useKeyclock(props);
+      const { error, accessToken, userData, profile } = await useKeyclock(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -146,11 +157,13 @@ export const KeycloakIconButton: React.FC<IconButtonProps<KeycloakProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useKeyclock(props);
+      const { error, accessToken, userData, profile } = await useKeyclock(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

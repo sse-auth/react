@@ -8,8 +8,8 @@ import {
   IconButtonProps,
   DiscordProps,
   DiscordProfile,
+  TokenSet,
 } from "@sse-auth/types";
-
 
 /**
  * Initiates the Auth0 login process using OAuth.
@@ -80,15 +80,12 @@ export async function useDiscord(
       }),
     });
 
-    const tokenData = await response.json();
+    const tokenData: TokenSet = await response.json();
 
     if (tokenData.error) {
-      throw new Error(
-        tokenData.error_description || "Error retrieving access token"
-      );
+      throw new Error("Error retrieving access token");
     }
 
-    const tokenType = tokenData.token_type;
     const accessToken = tokenData.access_token;
 
     const userResponse = await fetch(userUrl, {
@@ -98,9 +95,19 @@ export async function useDiscord(
       },
     });
 
-    const userData = await userResponse.json();
+    const userData: DiscordProfile = await userResponse.json();
 
-    return { error: null, accessToken, userData };
+    return {
+      error: null,
+      accessToken: tokenData,
+      userData,
+      profile: {
+        id: userData.id,
+        name: userData.global_name ?? userData.username,
+        email: userData.email,
+        image: userData.image_url,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -116,11 +123,11 @@ export const DiscordLogin: React.FC<LoginButtonProps<DiscordProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useDiscord(props);
+      const { error, accessToken, userData, profile } = await useDiscord(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

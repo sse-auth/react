@@ -48,7 +48,7 @@ export type GithubProps = {
 
 export interface GitHubProfile {
   login: string;
-  id: number;
+  id: string;
   node_id: string;
   avatar_url: string;
   gravatar_id: string | null;

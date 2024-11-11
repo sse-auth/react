@@ -1,21 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
-    "strict": true,
+    "allowJs": true,
+    "baseUrl": ".",
     "declaration": true,
-    "emitDeclarationOnly": false,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
+    "declarationMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist", // Ensure this is the output directory
-    "rootDir": "./src", // Ensure this is the root directory of your source files
-    "baseUrl": "./",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"]
-  },
-  "exclude": [
-    "node_modules",
-    "dist" // Exclude the output directory to avoid conflicts
-  ]
+    "isolatedModules": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "stripInternal": true,
+    "target": "ES2022",
+    "outDir": "./dist",
+    "rootDir": "src"
+  }
 }

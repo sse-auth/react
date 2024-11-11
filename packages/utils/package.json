@@ -1,11 +1,25 @@
 {
   "name": "@sse-auth/utils",
-  "version": "1.0.0",
-  "description": "All the utils for SSE Auth ",
-  "main": "./dist/index.js",
-  "types": "./dist/index.ts",
+  "version": "1.1.0",
+  "description": "All the utils for SSE Auth",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./cookie": {
+      "import": "./dist/cookie.js",
+      "types": "./dist/cookie.d.ts"
+    },
+    "./jwt": {
+      "import": "./dist/jwt.js",
+      "types": "./dist/jwt.d.ts"
+    },
+    "./package.json": "./package.json",
+    "./*": "./dist/*"
+  },
   "scripts": {
-    "build": "tsc"
+    "build": "rimraf dist && tsc"
   },
   "repository": {
     "type": "git",
@@ -19,14 +33,13 @@
   },
   "homepage": "https://github.com/sse-auth/react#readme",
   "dependencies": {
-    "jose": "^5.9.6",
-    "typescript": "^5.6.3"
+    "jose": "^5.9.6"
   },
   "peerDependencies": {
-    "@sse-auth/types": "^1.1.0"
+    "@sse-auth/types": "file:sse-auth-types-1.2.3.tgz"
   },
   "devDependencies": {
     "@panva/hkdf": "^1.2.1",
-    "@sse-auth/types": "^1.1.0"
+    "@sse-auth/types": "file:sse-auth-types-1.2.3.tgz"
   }
 }

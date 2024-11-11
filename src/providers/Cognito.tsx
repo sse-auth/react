@@ -5,15 +5,12 @@ import {
   LoginButtonProps,
   ResponseProps,
   CognitoProfile,
+  TokenSet,
 } from "@sse-auth/types";
 import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
 import { CognitoIcon } from "../assets/Icons";
 
-// Types
-interface Profile extends CognitoProfile {
-  [key: string]: any;
-}
 /**
  * Initiates the Cognito login process using OAuth.
  *
@@ -21,7 +18,9 @@ interface Profile extends CognitoProfile {
  * @returns {Promise<{ error: Error | null, accessToken: string | null, userData: UserProps | null }>}
  *          A promise that resolves with an object containing error, accessToken, and userData.
  */
-export async function useCognito(props: CognitoProps): Promise<ResponseProps> {
+export async function useCognito(
+  props: CognitoProps
+): Promise<ResponseProps<CognitoProfile>> {
   const {
     clientId,
     clientSecret,
@@ -69,13 +68,10 @@ export async function useCognito(props: CognitoProps): Promise<ResponseProps> {
       body: `grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${redirectUri}&code=${params.code}`,
     });
 
-    const tokenData = await response.json();
+    const tokenData: TokenSet = await response.json();
 
     if (tokenData.error) {
-      throw new Error(
-        tokenData.error_description ||
-          "Cognito login failed: Error retrieving access token"
-      );
+      throw new Error("Cognito login failed: Error retrieving access token");
     }
 
     const tokenType = tokenData.token_type;
@@ -88,11 +84,11 @@ export async function useCognito(props: CognitoProps): Promise<ResponseProps> {
       },
     });
 
-    const userData: Profile = await userResponse.json();
+    const userData: CognitoProfile = await userResponse.json();
 
     return {
       error: null,
-      accessToken,
+      accessToken: tokenData,
       userData,
       profile: {
         id: userData.sub,

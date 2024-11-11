@@ -1,62 +1,4 @@
-import { Awaitable, ProviderType, User, JsonValue } from "../types";
-
-export interface Authenticator {
-  /**
-   * ID of the user this authenticator belongs to.
-   */
-  userId?: string;
-  /**
-   * The provider account ID connected to the authenticator.
-   */
-  providerAccountId: string;
-  /**
-   * Number of times the authenticator has been used.
-   */
-  counter: number;
-  /**
-   * Whether the client authenticator backed up the credential.
-   */
-  credentialBackedUp: boolean;
-  /**
-   * Base64 encoded credential ID.
-   */
-  credentialID: string;
-  /**
-   * Base64 encoded credential public key.
-   */
-  credentialPublicKey: string;
-  /**
-   * Concatenated transport flags.
-   */
-  transports?: string | null;
-  /**
-   * Device type of the authenticator.
-   */
-  credentialDeviceType: string;
-}
-
-export interface AuthorizationDetails {
-  readonly type: string;
-  readonly locations?: string[];
-  readonly actions?: string[];
-  readonly datatypes?: string[];
-  readonly privileges?: string[];
-  readonly identifier?: string;
-  readonly [parameter: string]: JsonValue | undefined;
-}
-export interface TokenEndpointResponse {
-  readonly access_token: string;
-  readonly expires_in?: number;
-  readonly id_token?: string;
-  readonly refresh_token?: string;
-  readonly scope?: string;
-  readonly authorization_details?: AuthorizationDetails[];
-  /**
-   * NOTE: because the value is case insensitive it is always returned lowercased
-   */
-  readonly token_type: "bearer" | "dpop" | Lowercase<string>;
-  readonly [parameter: string]: JsonValue | undefined;
-}
+import { Awaitable, ProviderType, Profile, TokenEndpointResponse, Authenticator } from "../types";
 
 export interface Account extends Partial<TokenEndpointResponse> {
   /** Provider's id for this account. E.g. "google". See the full list at https://authjs.dev/reference/core/providers */
@@ -89,7 +31,7 @@ export interface Account extends Partial<TokenEndpointResponse> {
   expires_at?: number;
 }
 
-export interface AdapterUser extends User {
+export interface AdapterUser extends Profile {
   /** A unique identifier for the user. */
   id: string;
   /** The user's email address. */

@@ -5,6 +5,7 @@ import {
   ResponseProps,
   LoginButtonProps,
   IconButtonProps,
+  TokenSet,
 } from "@sse-auth/types";
 import { PopupWindow } from "../utils";
 import { TextButton, IconButton } from "../components";
@@ -40,7 +41,6 @@ export async function useAuth0(
   const authorizationURL = `https://${domain}/authorize`;
   const tokenURL = `https://${domain}/oauth/token`;
   const userUrl = `https://${domain}/userinfo`;
-  const userInfo = `https://${domain}/api/v2/users`
 
   const finalScope =
     emailRequired && !scope.includes("email") ? [...scope, "email"] : scope;
@@ -81,12 +81,10 @@ export async function useAuth0(
       }),
     });
 
-    const tokenData = await response.json();
+    const tokenData: TokenSet = await response.json();
 
     if (tokenData.error) {
-      throw new Error(
-        tokenData.error_description || "Error retrieving access token"
-      );
+      throw new Error("Error retrieving `Auth0` access token");
     }
 
     const tokenType = tokenData.token_type;
@@ -100,9 +98,19 @@ export async function useAuth0(
       },
     });
 
-    const userData = await userResponse.json();
+    const userData: Auth0Profile = await userResponse.json();
 
-    return { error: null, accessToken, userData };
+    return {
+      error: null,
+      accessToken: tokenData,
+      userData,
+      profile: {
+        id: userData.sub,
+        name: userData.name ?? userData.nickname ?? userData.username,
+        email: userData.email,
+        image: userData.picture,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -118,11 +126,11 @@ export const Auth0Login: React.FC<LoginButtonProps<Auth0Props>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useAuth0(props);
+      const { error, accessToken, userData, profile } = await useAuth0(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -151,11 +159,11 @@ export const Auth0IconButton: React.FC<IconButtonProps<Auth0Props>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useAuth0(props);
+      const { error, accessToken, userData, profile } = await useAuth0(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

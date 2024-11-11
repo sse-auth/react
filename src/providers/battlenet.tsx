@@ -1,24 +1,16 @@
 import React from "react";
-import { BattledotnetProps, ResponseProps } from "@sse-auth/types";
+import {
+  BattledotnetProps,
+  IconButtonProps,
+  LoginButtonProps,
+  ResponseProps,
+  TokenSet,
+} from "@sse-auth/types";
 import { BattleNetProfile } from "@sse-auth/types/providers/BattleDotNet";
 import { PopupWindow } from "../utils";
 // import { randomUUID } from "crypto";
 import { TextButton, IconButton } from "../components";
 import { BattleDotNetIcon } from "../assets/Icons";
-
-export interface BattleDotNetLoginButtonProps extends BattledotnetProps {
-  onSuccess: (accessToken: string, userData: any) => void;
-  onFailure: (error: Error) => void;
-}
-
-export type BattleDotNetIconButtonProps = BattledotnetProps & {
-  onSuccess: (accessToken: string, userData: any) => void;
-  onFailure: (error: Error) => void;
-  //   icon: IconProps["icon"];
-  icon?: React.ReactNode | string;
-  variant?: string;
-  className?: string;
-};
 
 /**
  * Initiates the GitHub login process using OAuth.
@@ -30,7 +22,7 @@ export type BattleDotNetIconButtonProps = BattledotnetProps & {
 
 export async function useBattleDotNet(
   props: BattledotnetProps
-): Promise<ResponseProps> {
+): Promise<ResponseProps<BattleNetProfile>> {
   const {
     clientId,
     clientSecret,
@@ -98,12 +90,10 @@ export async function useBattleDotNet(
       }),
     });
 
-    const tokenData = await response.json();
+    const tokenData: TokenSet = await response.json();
 
     if (tokenData.error) {
-      throw new Error(
-        tokenData.error_description || "Error retrieving access token"
-      );
+      throw new Error("Error retrieving `Battle.net` access token");
     }
 
     const accessToken = tokenData.access_token;
@@ -119,7 +109,7 @@ export async function useBattleDotNet(
 
     return {
       error: null,
-      accessToken,
+      accessToken: tokenData,
       userData,
       profile: {
         id: userData.sub,
@@ -133,21 +123,21 @@ export async function useBattleDotNet(
   }
 }
 
-export const BattleDotNetLogin: React.FC<BattleDotNetLoginButtonProps> = ({
-  onSuccess,
-  onFailure,
-  ...props
-}) => {
+export const BattleDotNetLogin: React.FC<
+  LoginButtonProps<BattledotnetProps>
+> = ({ onSuccess, onFailure, ...props }) => {
   const [loading, setLoading] = React.useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useBattleDotNet(props);
+      const { error, accessToken, userData, profile } = await useBattleDotNet(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -163,7 +153,9 @@ export const BattleDotNetLogin: React.FC<BattleDotNetLoginButtonProps> = ({
   );
 };
 
-export const BattleDotNetIconButton: React.FC<BattleDotNetIconButtonProps> = ({
+export const BattleDotNetIconButton: React.FC<
+  IconButtonProps<BattledotnetProps>
+> = ({
   onFailure,
   onSuccess,
   icon = BattleDotNetIcon,
@@ -176,11 +168,13 @@ export const BattleDotNetIconButton: React.FC<BattleDotNetIconButtonProps> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useBattleDotNet(props);
+      const { error, accessToken, userData, profile } = await useBattleDotNet(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

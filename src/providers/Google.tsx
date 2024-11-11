@@ -7,7 +7,8 @@ import {
   LoginButtonProps,
   IconButtonProps,
   GoogleProps,
-  GoogleProfile
+  GoogleProfile,
+  TokenSet,
 } from "@sse-auth/types";
 
 /**
@@ -73,13 +74,10 @@ export async function useGoogle(
       body: body,
     });
 
-    const tokenData = await response.json();
+    const tokenData: TokenSet = await response.json();
 
     if (tokenData.error) {
-      throw new Error(
-        tokenData.error?.data?.error_description ||
-          "Error retrieving access token"
-      );
+      throw new Error("Error retrieving access token");
     }
 
     const accessToken = tokenData.access_token;
@@ -90,8 +88,18 @@ export async function useGoogle(
       },
     });
 
-    const userData = await userResponse.json();
-    return { error: null, accessToken, userData };
+    const userData: GoogleProfile = await userResponse.json();
+    return {
+      error: null,
+      accessToken: tokenData,
+      userData,
+      profile: {
+        id: userData.sub,
+        name: userData.name,
+        email: userData.email,
+        image: userData.picture,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -107,11 +115,11 @@ export const GoogleLogin: React.FC<LoginButtonProps<GoogleProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGoogle(props);
+      const { error, accessToken, userData, profile } = await useGoogle(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -140,11 +148,11 @@ export const GoogleIconButton: React.FC<IconButtonProps<GoogleProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useGoogle(props);
+      const { error, accessToken, userData, profile } = await useGoogle(props);
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

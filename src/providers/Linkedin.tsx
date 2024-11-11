@@ -4,9 +4,11 @@ import { parseURL, PopupWindow, stringifyParsedURL } from "../utils";
 import { TextButton, IconButton } from "../components";
 import {
   IconButtonProps,
+  LinkedInProfile,
   LinkedInProps,
   LoginButtonProps,
   ResponseProps,
+  TokenSet,
 } from "@sse-auth/types";
 
 /**
@@ -82,13 +84,10 @@ export async function useLinkedIn(
       body: body,
     });
 
-    const tokenData = await response.json();
+    const tokenData: TokenSet = await response.json();
 
     if (tokenData.error) {
-      throw new Error(
-        tokenData.error?.data?.error_description ||
-          "Error retrieving access token"
-      );
+      throw new Error("Error retrieving access token");
     }
 
     const accessToken = tokenData.access_token;
@@ -100,8 +99,18 @@ export async function useLinkedIn(
       },
     });
 
-    const userData = await userResponse.json();
-    return { error: null, accessToken, userData };
+    const userData: LinkedInProfile = await userResponse.json();
+    return {
+      error: null,
+      accessToken: tokenData,
+      userData,
+      profile: {
+        id: userData.sub,
+        name: userData.name,
+        email: userData.email,
+        image: userData.picture,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -117,11 +126,13 @@ export const LinkedInLogin: React.FC<LoginButtonProps<LinkedInProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useLinkedIn(props);
+      const { error, accessToken, userData, profile } = await useLinkedIn(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -150,11 +161,13 @@ export const LinkedInIconButton: React.FC<IconButtonProps<LinkedInProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useLinkedIn(props);
+      const { error, accessToken, userData, profile } = await useLinkedIn(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

@@ -7,7 +7,7 @@ import {
   LoginButtonProps,
   MicrosoftProps,
   ResponseProps,
-  MicrosoftEntraIDProfile
+  MicrosoftEntraIDProfile,
 } from "@sse-auth/types";
 
 /**
@@ -24,7 +24,7 @@ export async function useMicrosoft(
     clientId,
     clientSecret,
     tenant,
-    scope,
+    scope = ["openid", "profile", "email", "User.Read"],
     authorizationURL = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize`,
     tokenURL = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/token`,
     userURL = "https://graph.microsoft.com/v1.0/me",
@@ -97,8 +97,18 @@ export async function useMicrosoft(
       },
     });
 
-    const userData = await userResponse.json();
-    return { error: null, accessToken, userData };
+    const userData: MicrosoftEntraIDProfile = await userResponse.json();
+    return {
+      error: null,
+      accessToken,
+      userData,
+      profile: {
+        id: userData.sub,
+        name: userData.nickname,
+        email: userData.email,
+        image: userData.picture,
+      },
+    };
   } catch (error) {
     return { error, accessToken: null, userData: null };
   }
@@ -114,11 +124,13 @@ export const MicrosoftLogin: React.FC<LoginButtonProps<MicrosoftProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useMicrosoft(props);
+      const { error, accessToken, userData, profile } = await useMicrosoft(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);
@@ -147,11 +159,13 @@ export const MicrosoftIconButton: React.FC<IconButtonProps<MicrosoftProps>> = ({
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const { error, accessToken, userData } = await useMicrosoft(props);
+      const { error, accessToken, userData, profile } = await useMicrosoft(
+        props
+      );
       if (error) {
         onFailure(error as Error);
       } else if (accessToken && userData) {
-        onSuccess(accessToken, userData);
+        onSuccess(accessToken, userData, profile);
       }
     } catch (error) {
       onFailure(error as Error);

@@ -1,15 +1,11 @@
-import { hkdf } from "@panva/hkdf";
+import hkdf from "@panva/hkdf";
 import {
   EncryptJWT,
   base64url,
   calculateJwkThumbprint,
   jwtDecrypt,
 } from "jose";
-import {
-  JWT,
-  JWTEncodeParams,
-  GetTokenParams,
-} from "@sse-auth/types/dist/utils";
+import { JWT, JWTEncodeParams, GetTokenParams } from "@sse-auth/types/utils";
 import { defaultCookies, SessionStore } from "./cookie";
 import { parse } from "./lib/cookie";
 
