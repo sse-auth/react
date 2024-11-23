@@ -3,6 +3,7 @@ import type {
   CookiesOptions,
   RequestInternal,
   LoggerInstance,
+  Cookie,
 } from "@sse-auth/types/utils";
 
 const ALLOWED_COOKIE_SIZE = 4096;
@@ -111,10 +112,6 @@ export function defaultCookies(useSecureCookies: boolean) {
       },
     },
   } as const satisfies CookiesOptions;
-}
-
-export interface Cookie extends CookieOption {
-  value: string;
 }
 
 type Chunks = Record<string, string>;

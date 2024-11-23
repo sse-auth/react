@@ -36,10 +36,10 @@
     "jose": "^5.9.6"
   },
   "peerDependencies": {
-    "@sse-auth/types": "file:sse-auth-types-1.2.3.tgz"
+    "@sse-auth/types": "^1.2.4-a1"
   },
   "devDependencies": {
     "@panva/hkdf": "^1.2.1",
-    "@sse-auth/types": "file:sse-auth-types-1.2.3.tgz"
+    "@sse-auth/types": "^1.2.4-a1"
   }
 }

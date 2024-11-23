@@ -95,3 +95,7 @@ export interface CookiesOptions {
   nonce: Partial<CookieOption>;
   webauthnChallenge: Partial<CookieOption>;
 }
+
+export interface Cookie extends CookieOption {
+  value: string;
+}

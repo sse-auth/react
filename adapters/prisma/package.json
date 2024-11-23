@@ -1,0 +1,55 @@
+{
+  "name": "@sse-auth/aprisma",
+  "version": "1.0.0",
+  "description": "Prisma adapter for SSE Authentication",
+  "scripts": {
+    "clean": "rimraf ./prisma/dev.db* || echo 'File deleted' && rimraf *.js *.d.ts*",
+    "init:default": "prisma migrate dev --name init --skip-seed",
+    "init:custom": "prisma migrate dev --name init-custom --schema ./prisma/custom.prisma",
+    "test:default": "pnpm init:default && vitest run -c ../utils/vitest.config.ts",
+    "test:custom": "pnpm init:custom && CUSTOM_MODEL=1 vitest run -c ../utils/vitest.config.ts",
+    "test:mongodb": "./test/mongodb.test.sh",
+    "test": "pnpm test:default && pnpm test:custom",
+    "test:og": "pnpm test:default && pnpm test:custom && pnpm test:mongodb",
+    "build": "prisma generate && tsc",
+    "dev": "prisma generate && tsc -w",
+    "studio": "prisma studio"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sse-auth/react.git",
+    "directory": "adapters/prisma"
+  },
+  "author": "SSE World",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sse-auth/react/issues"
+  },
+  "type": "module",
+  "types": "./index.d.ts",
+  "files": [
+    "*.js",
+    "*.d.ts*",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "homepage": "https://github.com/sse-auth/react#readme",
+  "devDependencies": {
+    "@prisma/client": "^5.22.0",
+    "@prisma/extension-accelerate": "^1.2.1",
+    "mongodb": "^6.10.0",
+    "prisma": "^5.22.0"
+  },
+  "peerDependencies": {
+    "@prisma/client": ">=2.26.0 || >=3 || >=4 || >=5"
+  },
+  "dependencies": {
+    "@sse-auth/adapter-core": "^1.1.0"
+  }
+}

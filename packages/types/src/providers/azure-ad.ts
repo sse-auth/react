@@ -1,3 +1,3 @@
-import { MicrosoftEntraIDProfile } from "./Microsoft";
+import { MicrosoftEntraIDProfile } from "./microsoft";
 
 export type AzureADProfile = MicrosoftEntraIDProfile;

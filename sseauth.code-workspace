@@ -31,6 +31,12 @@
 		{
 			"name": "utils",
 			"path": "packages/utils"
+		},
+		{
+			"path": "adapters/azure-tables"
+		},
+		{
+			"path": "adapters/d1"
 		}
 	],
 	"settings": {

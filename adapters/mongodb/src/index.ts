@@ -27,7 +27,7 @@ export const defaultCollections: Required<
 > = {
   Users: "sse-users",
   Accounts: "sse-accounts",
-  Sessions: "sse-sections",
+  Sessions: "sse-sessions",
   VerificationTokens: "sse-verification_tokens",
 };
 

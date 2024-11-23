@@ -1,0 +1,44 @@
+{
+  "name": "@sse-auth/a-azure-tables",
+  "version": "1.0.0",
+  "description": "Azure Tables Storage adapter for SSE Auth.",
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "files": [
+    "*.d.ts*",
+    "*.js",
+    "src"
+  ],
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sse-auth/react.git"
+  },
+  "author": "SSE World",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sse-auth/react/issues"
+  },
+  "homepage": "https://github.com/sse-auth/react#readme",
+  "dependencies": {
+    "@sse-auth/adapter-core": "^1.1.0"
+  },
+  "peerDependencies": {
+    "@azure/data-tables": "^13.2.2"
+  },
+  "devDependencies": {
+    "@azure/data-tables": "^13.2.2"
+  }
+}
