@@ -1,3 +1,41 @@
+/**
+ *
+ *
+ * This module contains functions and types
+ * to encode and decode {@link https://authjs.dev/concepts/session-strategies#jwt-session JWT}s
+ * issued and used by Auth.js.
+ *
+ * The JWT issued by Auth.js is _encrypted by default_, using the _A256CBC-HS512_ algorithm ({@link https://www.rfc-editor.org/rfc/rfc7518.html#section-5.2.5 JWE}).
+ * It uses the `AUTH_SECRET` environment variable or the passed `secret` property to derive a suitable encryption key.
+ *
+ * :::info Note
+ * Auth.js JWTs are meant to be used by the same app that issued them.
+ * If you need JWT authentication for your third-party API, you should rely on your Identity Provider instead.
+ * :::
+ *
+ * ## Installation
+ *
+ * ```bash npm2yarn
+ * npm install @auth/core
+ * ```
+ *
+ * You can then import this submodule from `@auth/core/jwt`.
+ *
+ * ## Usage
+ *
+ * :::warning Warning
+ * This module *will* be refactored/changed. We do not recommend relying on it right now.
+ * :::
+ *
+ *
+ * ## Resources
+ *
+ * - [What is a JWT session strategy](https://authjs.dev/concepts/session-strategies#jwt-session)
+ * - [RFC7519 - JSON Web Token (JWT)](https://www.rfc-editor.org/rfc/rfc7519)
+ *
+ * @module jwt
+ */
+
 import hkdf from "@panva/hkdf";
 import {
   EncryptJWT,

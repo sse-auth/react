@@ -199,7 +199,57 @@ export async function verifyAuthenticate(
   request: RequestInternal,
   resCookies: Cookie[]
 ): Promise<{ account: AdapterAccount; user: SSE_User }> {
-  const { adapter } = options
+  const { adapter, provider } = options;
+
+  // Get WebAuthn response from request body
+  const data =
+    request.body && typeof request.body.data === "string"
+      ? (JSON.parse(request.body.data) as unknown)
+      : undefined;
+  if (
+    !data ||
+    typeof data !== "object" ||
+    !("id" in data) ||
+    typeof data.id !== "string"
+  ) {
+    throw new Error("Invalid WebAuthn Authentication response");
+  }
+
+  // Reset the ID so we smooth out implementation differences
+  const credentialID = toBase64(fromBase64(data.id));
+
+  // Get authenticator from database
+  const authenticator = await adapter.getAuthenticator(credentialID);
+  if (!authenticator) {
+    throw new Error(
+      `WebAuthn authenticator not found in database: ${JSON.stringify({
+        credentialID,
+      })}`
+    );
+  }
+
+  // Get challenge from request cookies
+  const { challenge: expectedChallenge } = await webauthnChallenge.use(
+    options,
+    request.cookies,
+    resCookies
+  );
+
+  // Verify the response
+  let verification: VerifiedAuthenticationResponse
+  try {
+    const relayingParty = provider.getRelayingParty(options, request);
+    verification = await provider.simpleWebAuthn.verifyAuthenticationResponse({
+      ...provider.verifyAuthenticationOptions,
+      expectedChallenge,
+      response: data as AuthenticationResponseJSON,
+      authenticator: fromAdapterAuthenticator(authenticator),
+      expectedOrigin: relayingParty.origin,
+      expectedRPID: relayingParty.id,
+    });
+  } catch (e: any) {
+    throw new Error(e);
+  }
 }
 
 /**
